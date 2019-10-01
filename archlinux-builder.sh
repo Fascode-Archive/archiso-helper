@@ -131,6 +131,14 @@ fi
 blue_log "Start building ArchLinux LiveCD."
 cd $working_directory
 ./build.sh -v
+
+## 最終処理
 mv $working_directory/out/* $image_file_path
-blue_log "Created ArchLinux Live CD in $image_file_path"
+chmod 755 $image_file_path
+if [[ -f $image_file_path ]]; then
+    blue_log "Created ArchLinux Live CD in $image_file_path"
+else
+    red_log "The image file that should have existed does not exist."
+    red_log "Please run the script again."
+fi
 rm -r $working_directory
