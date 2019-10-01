@@ -9,12 +9,12 @@ day=`date "+%d"`
 
 ## 設定
 # このディレクトリ内に設定ファイル等を作成するため空のディレクトリを指定することをおすすめします。
-working_directory="/home/arch-build" 
+working_directory="/home/arch-build"
 # フルパスで表記してください。それぞれ${yaer}、${month}、${day}で年、月、日に置き換えることができます。
-image_file_path="/home/archlinux-${year}.${month}.${day}-x86_64.iso" 
+image_file_path="/home/archlinux-${year}.${month}.${day}-x86_64.iso"
 # 以下の設定は通常は変更しません。
 archiso_package_name="archiso" # pacaptのパッケージ名です。(AURのパッケージ名にする場合はAURHelperを有効化してください。)
-aur_helper="yay" # AURHelperの使用を強制する場合にのみpacmanから変更してください。もし存在しないAURHelperが入力された場合はpacmanが使用されます。また、AURHelperはpacmanと同じ構文のもののみ利用可能です。
+aur_helper="pacman" # AURHelperの使用を強制する場合にのみpacmanから変更してください。もし存在しないAURHelperが入力された場合はpacmanが使用されます。また、AURHelperはpacmanと同じ構文のもののみ利用可能です。
 bluelog=0 # 0=有効 1=無効 それ以外=有効
 
 
@@ -69,13 +69,21 @@ fi
 
 
 ## AUR Helperチェック
-if [[ $(package_check $aur_helper ; printf $? ) = 1 -o ! $aur_helper = "pacman" ]]; then
+if [[ $(package_check $aur_helper ; printf $? ) = 1 || $aur_helper = "pacman" ]]; then
     pacman=pacman
 else
     blue_log "Found AUR_Helper $aur_helper."
     blue_log "Use $aur_helper"
     pacman=$aur_helper
 fi
+
+
+## 出力先チェック
+if [[ -f $image_file_path ]]; then
+    red_log "A file with the same name exists."
+    exit 1
+fi
+
 
 ## ArchISOインストール
 if [[ $(package_check $archiso_package_name ; printf $?) = 1 ]]; then
