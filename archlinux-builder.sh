@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
 
-## 変数定義
+## 初期変数定義
 year=`date "+%Y"`
 month=`date "+%m"`
 day=`date "+%d"`
@@ -12,11 +12,16 @@ day=`date "+%d"`
 working_directory="/home/arch-build"
 # フルパスで表記してください。それぞれ${yaer}、${month}、${day}で年、月、日に置き換えることができます。
 image_file_path="/home/archlinux-${year}.${month}.${day}-x86_64.iso"
+
+
+##変数定義
 # 以下の設定は通常は変更しません。
 archiso_package_name="archiso" # pacaptのパッケージ名です。(AURのパッケージ名にする場合はAURHelperを有効化してください。)
 aur_helper="pacman" # AURHelperの使用を強制する場合にのみpacmanから変更してください。もし存在しないAURHelperが入力された場合はpacmanが使用されます。また、AURHelperはpacmanと同じ構文のもののみ利用可能です。
 bluelog=0 # 0=有効 1=無効 それ以外=有効
-
+local_archiso_version=
+remote_archiso_version=#これらの値を変更するとArchISOのバージョン判定が正常に行えなくなります。ArchISOのバージョンを固定する場合にのみ、両方の値を変更してください。（両方の値は必ず一致させてください。）
+current_scriput_path=$(realpath "$0")
 
 ## 関数定義
 function red_log () {
@@ -48,9 +53,10 @@ function package_check () {
     fi
 }
 
+
 ## Rootチェック
 if [[ ! $UID = 0 ]]; then
-    red_log "You need root permission." >&2
+    red_log "You need root permission."
     exit 1
 fi
 
@@ -85,12 +91,27 @@ if [[ -f $image_file_path ]]; then
 fi
 
 
-## ArchISOインストール
+## ArchISOインストール、アップグレード
+if [[ -z $remote_archiso_version ]]; then
+    remote_archiso_version=$(pacman -Ss archiso | head -n 1 | awk '{print $2}')
+fi
+if [[ -z $local_archiso_version ]]; then
+    local_archiso_version=$(pacman -Q | grep "archiso" | awk '{print $2}')
+fi
+
 if [[ $(package_check $archiso_package_name ; printf $?) = 1 ]]; then
     yellow_log "ArchISO is not installed."
     yellow_log "Install ArchISO."
     $pacman -Syy --noconfirm
     $pacman -S --noconfirm archiso
+elif [[ $local_archiso_version < $remote_archiso_version ]]; then
+    yellow_log "ArchISO is installed."
+    yellow_log "But ArchISO is older."
+    yellow_log "Upgrade ArchISO."
+    $pacman -Syy --noconfirm
+    $pacman -S --noconfirm archiso
+elif [[ $local_archiso_version > $remote_archiso_version ]]; then
+    yellow_log "Installed ArchISo is newer than official repository."
 fi
 
 
