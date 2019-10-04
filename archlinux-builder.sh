@@ -9,7 +9,7 @@ day=`date "+%d"`
 
 ## 設定
 # このディレクトリ内に設定ファイル等を作成するため空のディレクトリを指定することをおすすめします。
-working_directory="/home/arch-build"
+working_directory="/home/archlinux-latest-livecd-builder"
 # フルパスで表記してください。それぞれ${yaer}、${month}、${day}で年、月、日に置き換えることができます。
 image_file_path="/home/archlinux-${year}.${month}.${day}-x86_64.iso"
 
