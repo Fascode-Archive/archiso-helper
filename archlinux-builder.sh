@@ -180,7 +180,8 @@ fi
 
 ## ISO作成
 blue_log "Start building ArchLinux LiveCD."
-$working_directory/build.sh
+cd $working_directory
+./build.sh
 
 ## 最終処理
 mv $working_directory/out/* $image_file_path
