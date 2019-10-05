@@ -1,17 +1,24 @@
 #!/usr/bin/env bash
 
-
 ## 初期変数定義
 year=`date "+%Y"`
 month=`date "+%m"`
 day=`date "+%d"`
 
 
-## 設定
+#Settings============================================================================================#
+
 # このディレクトリ内に設定ファイル等を作成するため空のディレクトリを指定することをおすすめします。
-working_directory="/home/archlinux-latest-livecd-builder"
+working_directory="/home/hayao/archlinux-latest-livecd-builder"
+
 # フルパスで表記してください。それぞれ${yaer}、${month}、${day}で年、月、日に置き換えることができます。
 image_file_path="/home/archlinux-${year}.${month}.${day}-x86_64.iso"
+
+# 生成したいアーキテクチャ（i686 or x86_64）を入力してください（i686は非公式リポジトリを使用します）
+# make_arch=x86_64
+make_arch=i686
+
+#====================================================================================================#
 
 
 ##変数定義
@@ -20,8 +27,11 @@ archiso_package_name="archiso" # pacaptのパッケージ名です。(AURのパ�
 aur_helper="pacman" # AURHelperの使用を強制する場合にのみpacmanから変更してください。もし存在しないAURHelperが入力された場合はpacmanが使用されます。また、AURHelperはpacmanと同じ構文のもののみ利用可能です。
 bluelog=0 # 0=有効 1=無効 それ以外=有効
 local_archiso_version=
-remote_archiso_version=#これらの値を変更するとArchISOのバージョン判定が正常に行えなくなります。ArchISOのバージョンを固定する場合にのみ、両方の値を変更してください。（両方の値は必ず一致させてください。）
+remote_archiso_version= #これらの値を変更するとArchISOのバージョン判定が正常に行えなくなります。ArchISOのバージョンを固定する場合にのみ、両方の値を変更してください。（両方の値は必ず一致させてください。）
 current_scriput_path=$(realpath "$0")
+current_scriput_dir=$(pwd)
+i686_build_script=$current_scriput_dir/build_i686.sh
+
 
 ## 関数定義
 function red_log () {
@@ -90,10 +100,17 @@ if [[ -f $image_file_path ]]; then
     exit 1
 fi
 
+## アーキテクチャチェック
+case $make_arch in
+    i686 ) : ;;
+    x86_64 ) : ;;
+    * ) red_log "This architecture is illegal." 
+        exit 1 ;;
+esac
 
 ## ArchISOインストール、アップグレード
 if [[ -z $remote_archiso_version ]]; then
-    remote_archiso_version=$(pacman -Ss archiso | head -n 1 | awk '{print $2}')
+    remote_archiso_version=$(pacman -Ss archiso | awk '{print $2}' | head -n 1)
 fi
 if [[ -z $local_archiso_version ]]; then
     local_archiso_version=$(pacman -Q | grep "archiso" | awk '{print $2}')
@@ -108,10 +125,14 @@ elif [[ $local_archiso_version < $remote_archiso_version ]]; then
     yellow_log "ArchISO is installed."
     yellow_log "But ArchISO is older."
     yellow_log "Upgrade ArchISO."
+    yellow_log "Installed  version: $local_archiso_version"
+    yellow_log "Repository version: $remote_archiso_version"
     $pacman -Syy --noconfirm
     $pacman -S --noconfirm archiso
 elif [[ $local_archiso_version > $remote_archiso_version ]]; then
-    yellow_log "Installed ArchISo is newer than official repository."
+    yellow_log "Installed ArchISO is newer than official repository."
+    yellow_log "Installed  version: $local_archiso_version"
+    yellow_log "Repository version: $remote_archiso_version"
 fi
 
 
@@ -142,6 +163,15 @@ fi
 ## ArchISOプロファイルコピー
 if [[ -d /usr/share/archiso/configs/baseline/ ]]; then
     cp -r /usr/share/archiso/configs/baseline/* $working_directory
+    if [[ $make_arch = "i686" ]]; then
+        if [[ ! -f $i686_build_script ]]; then
+            red_log "i686's build.sh is not exist."
+            exit 1
+        else
+            rm $working_directory/build.sh
+            cp $i686_build_script $working_directory/build.sh
+        fi
+    fi
 else
     red_log "There is not ArchISO profiles."
     red_log "Please Install ArchISO"
@@ -150,8 +180,7 @@ fi
 
 ## ISO作成
 blue_log "Start building ArchLinux LiveCD."
-cd $working_directory
-./build.sh -v
+$working_directory/build.sh
 
 ## 最終処理
 mv $working_directory/out/* $image_file_path
@@ -162,4 +191,8 @@ else
     red_log "The image file that should have existed does not exist."
     red_log "Please run the script again."
 fi
-rm -r $working_directory
+if [[ -d $working_directory ]]; then
+    rm -rf $working_directory
+else
+    red_log "$working_directory is not found."
+fi
