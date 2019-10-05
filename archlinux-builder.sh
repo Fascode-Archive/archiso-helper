@@ -15,8 +15,7 @@ working_directory="/home/hayao/archlinux-latest-livecd-builder"
 image_file_path="/home/archlinux-${year}.${month}.${day}-x86_64.iso"
 
 # 生成したいアーキテクチャ（i686 or x86_64）を入力してください（i686は非公式リポジトリを使用します）
-# make_arch=x86_64
-make_arch=i686
+make_arch=x86_64
 
 #====================================================================================================#
 

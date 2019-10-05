@@ -6,6 +6,7 @@ ArchLinuxの最新のライブCDをビルドします
 
 ```bash
 wget -q https://raw.githubusercontent.com/Hayao0819/archlinux-latest-livecd-builder/master/archlinux-builder.sh
+wget -q https://raw.githubusercontent.com/Hayao0819/archlinux-latest-livecd-builder/master/build_i686.sh
 chmod 755 archlinux-builder.sh
 sudo ./archlinux-builder.sh
 ```
@@ -29,6 +30,13 @@ working_directory="/home/arch-build"
 
 ```bash
 image_file_path="/home/archlinux-${year}.${month}.${day}-x86_64.iso"
+```
+
+## make_arch
+作成するLiveCDのアーキテクチャです。i686もしくはx86_64で指定してください。
+
+```bash
+make_arck=x86_64
 ```
 
 ## archiso_package_name
