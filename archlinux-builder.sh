@@ -184,7 +184,7 @@ cd $working_directory
 
 ## 最終処理
 mv $working_directory/out/* $image_file_path
-chmod 755 $image_file_path
+chmod 775 $image_file_path
 if [[ -f $image_file_path ]]; then
     blue_log "Created ArchLinux Live CD in $image_file_path"
 else
