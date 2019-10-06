@@ -9,7 +9,7 @@ day=`date "+%d"`
 #Settings============================================================================================#
 
 # このディレクトリ内に設定ファイル等を作成するため空のディレクトリを指定することをおすすめします。
-working_directory="/home/hayao/archlinux-latest-livecd-builder"
+working_directory="/home/archlinux-latest-livecd-builder"
 
 # フルパスで表記してください。それぞれ${yaer}、${month}、${day}で年、月、日に置き換えることができます。
 image_file_path="/home/archlinux-${year}.${month}.${day}-x86_64.iso"
@@ -30,6 +30,7 @@ remote_archiso_version= #これらの値を変更するとArchISOのバージョ
 current_scriput_path=$(realpath "$0")
 current_scriput_dir=$(pwd)
 i686_build_script=$current_scriput_dir/build_i686.sh
+archiso_configs="/usr/share/archiso/configs/releng"
 
 
 ## 関数定義
@@ -142,7 +143,9 @@ if [[ ! -d $working_directory ]]; then
 else
     printf "Working directory already exists. Do you want to initialize it? :"
     read yn
-    alias del='rm -rf $working_directory'
+    function del () {
+        rm -rf $working_directory
+    }
     case $yn in
         y ) del ;;
         Y ) del ;;
@@ -160,8 +163,8 @@ if [[ ! -d $working_directory/out/ ]]; then
 fi
 
 ## ArchISOプロファイルコピー
-if [[ -d /usr/share/archiso/configs/baseline/ ]]; then
-    cp -r /usr/share/archiso/configs/baseline/* $working_directory
+if [[ -d $archiso_configs ]]; then
+    cp -r $archiso_configs/* $working_directory
     if [[ $make_arch = "i686" ]]; then
         if [[ ! -f $i686_build_script ]]; then
             red_log "i686's build.sh is not exist."
@@ -173,14 +176,20 @@ if [[ -d /usr/share/archiso/configs/baseline/ ]]; then
     fi
 else
     red_log "There is not ArchISO profiles."
-    red_log "Please Install ArchISO"
+    if [[ $archiso_configs = "/usr/share/archiso/configs/releng/" ]]; then
+        red_log "Please Install ArchISO."
+    else
+        red_log "Please check setting "archiso_configs""
+    fi
     exit 1
 fi
+echo "linux" >> $working_directory/packages.$make_arch
+
 
 ## ISO作成
 blue_log "Start building ArchLinux LiveCD."
 cd $working_directory
-./build.sh
+./build.sh -v
 
 ## 最終処理
 mv $working_directory/out/* $image_file_path
