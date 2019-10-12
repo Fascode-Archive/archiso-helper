@@ -1,7 +1,9 @@
 #!/usr/bin/env bash
 
+
 ## 設定ファイルへのパス
 settings_path=$(pwd)/settings.bash
+
 
 ## 変数定義（この設定は設定ファイルがない場合にのみ適用されます。）
 settings () {
@@ -44,6 +46,10 @@ if [[ ! -f $settings_path || -z $settings_path ]]; then
     settings
 else
     source $settings_path
+    check_import=$?
+    if [[ ! $check_import = 0 ]]; then
+        settings
+    fi
 fi
 
 
