@@ -1,42 +1,47 @@
 #!/usr/bin/env bash
 
-## 初期変数定義
-year=`date "+%Y"`
-month=`date "+%m"`
-day=`date "+%d"`
+## 設定ファイルへのパス
+settings_path=$(pwd)/settings.bash
 
 
-## Setting s==========================================================================================#
-
-# このディレクトリ内に設定ファイル等を作成するため空のディレクトリを指定することをおすすめします。
-working_directory="/home/archlinux-latest-livecd-builder"
-
-# フルパスで表記してください。それぞれ${yaer}、${month}、${day}で年、月、日に置き換えることができます。
-image_file_path="/home/archlinux-${year}.${month}.${day}-x86_64.iso"
-
-# 生成したいアーキテクチャ（i686 or x86_64）を入力してください（i686は非公式リポジトリを使用します）
-make_arch=x86_64
-
-# 追加するパッケージ
-# catコマンド以下に追加でインストールするパッケージを入力してください
-cat << PKG >> $working_directory/packages.$make_arch
-
-PKG
-
-#====================================================================================================#
+## 変数定義（この設定は設定ファイルがない場合にのみ適用されます。）
+if [[ ! -f $settings_path || -z $settings_path ]]; then
+    # 初期変数
+    year=`date "+%Y"`
+    month=`date "+%m"`
+    day=`date "+%d"`
+    # このディレクトリ内に設定ファイル等を作成するため空のディレクトリを指定することをおすすめします。
+    working_directory="/home/archlinux-latest-livecd-builder"
+    # フルパスで表記してください。それぞれ${yaer}、${month}、${day}で年、月、日に置き換えることができます。
+    image_file_path="/home/archlinux-${year}.${month}.${day}-x86_64.iso"
+    # 生成したいアーキテクチャ（i686 or x86_64）を入力してください（i686は非公式リポジトリを使用します）
+    make_arch=x86_64
+    # 追加するパッケージ
+    add_pkg=(linux networkmanager)
 
 
-##変数定義
-# 以下の設定は通常は変更しません。
-archiso_package_name="archiso" # pacaptのパッケージ名です。(AURのパッケージ名にする場合はAURHelperを有効化してください。)
-aur_helper="pacman" # AURHelperの使用を強制する場合にのみpacmanから変更してください。もし存在しないAURHelperが入力された場合はpacmanが使用されます。また、AURHelperはpacmanと同じ構文のもののみ利用可能です。
-bluelog=0 # 0=有効 1=無効 それ以外=有効
-local_archiso_version=
-remote_archiso_version= #これらの値を変更するとArchISOのバージョン判定が正常に行えなくなります。ArchISOのバージョンを固定する場合にのみ、両方の値を変更してください。（両方の値は必ず一致させてください。）
-current_scriput_path=$(realpath "$0")
-current_scriput_dir=$(pwd)
-i686_build_script=$current_scriput_dir/build_i686.sh
-archiso_configs="/usr/share/archiso/configs/releng"
+    # archisoのパッケージ名です。(AURのパッケージ名にする場合はAURHelperを有効化してください。)
+    archiso_package_name="archiso"
+    # AURHelperの使用を強制する場合にのみpacmanから変更してください。もし存在しないAURHelperが入力された場合はpacmanが使用されます。また、AURHelperはpacmanと同じ構文のもののみ利用可能です。
+    aur_helper="pacman" 
+    # メッセージの出力（0=有効 1=無効 それ以外=有効）
+    bluelog=0 
+    # これらの値を変更するとArchISOのバージョン判定が正常に行えなくなります。ArchISOのバージョンを固定する場合にのみ、両方の値を変更してください。（両方の値は必ず一致させてください。）
+    local_archiso_version=
+    remote_archiso_version= 
+    # i686用ビルドスクリプトへのパス
+    i686_build_script=$current_scriput_dir/build_i686.sh
+    # archisoの設定プロファイルへのパス
+    archiso_configs="/usr/share/archiso/configs/releng"
+
+    # 以下は変更しないでください
+    current_scriput_path=$(realpath "$0")
+    current_scriput_dir=$(pwd)
+    number_of_pkg=${#add_pkg[*]}
+
+    source $settings_path
+
+    
 
 
 ## 関数定義
@@ -189,8 +194,12 @@ else
     fi
     exit 1
 fi
-echo "linux" >> $working_directory/packages.$make_arch
 
+
+## カスタムパッケージの追記
+for (( i=0; i<number_of_pkg ; i++ )); do
+    echo ${add_pkg[$i]} >> $working_directory/package.$make_arch
+done 
 
 ## ISO作成
 blue_log "Start building ArchLinux LiveCD."
@@ -198,13 +207,19 @@ cd $working_directory
 ./build.sh -v
 
 ## 最終処理
+if [[ -z $( ls $working_directory/out ) ]]; then
+    red_log "The image file that should have existed does not exist."
+    red_log "Please run the script again."
+    exit 1
+fi
 mv $working_directory/out/* $image_file_path
 chmod 775 $image_file_path
 if [[ -f $image_file_path ]]; then
     blue_log "Created ArchLinux Live CD in $image_file_path"
 else
-    red_log "The image file that should have existed does not exist."
-    red_log "Please run the script again."
+    red_log "The image file could not be moved."
+    red_log "The file may be in $working_directory/out/ ."
+    exit 1
 fi
 if [[ -d $working_directory ]]; then
     rm -rf $working_directory
