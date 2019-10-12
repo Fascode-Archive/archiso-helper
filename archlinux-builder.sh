@@ -3,13 +3,8 @@
 ## 設定ファイルへのパス
 settings_path=$(pwd)/settings.bash
 
-
 ## 変数定義（この設定は設定ファイルがない場合にのみ適用されます。）
-if [[ ! -f $settings_path || -z $settings_path ]]; then
-    # 初期変数
-    year=`date "+%Y"`
-    month=`date "+%m"`
-    day=`date "+%d"`
+settings () {
     # このディレクトリ内に設定ファイル等を作成するため空のディレクトリを指定することをおすすめします。
     working_directory="/home/archlinux-latest-livecd-builder"
     # フルパスで表記してください。それぞれ${yaer}、${month}、${day}で年、月、日に置き換えることができます。
@@ -18,7 +13,6 @@ if [[ ! -f $settings_path || -z $settings_path ]]; then
     make_arch=x86_64
     # 追加するパッケージ
     add_pkg=(linux networkmanager)
-
 
     # archisoのパッケージ名です。(AURのパッケージ名にする場合はAURHelperを有効化してください。)
     archiso_package_name="archiso"
@@ -33,15 +27,24 @@ if [[ ! -f $settings_path || -z $settings_path ]]; then
     i686_build_script=$current_scriput_dir/build_i686.sh
     # archisoの設定プロファイルへのパス
     archiso_configs="/usr/share/archiso/configs/releng"
+}
 
-    # 以下は変更しないでください
-    current_scriput_path=$(realpath "$0")
-    current_scriput_dir=$(pwd)
-    number_of_pkg=${#add_pkg[*]}
 
+# 変数設定
+year=`date "+%Y"`
+month=`date "+%m"`
+day=`date "+%d"`
+current_scriput_path=$(realpath "$0")
+current_scriput_dir=$(pwd)
+number_of_pkg=${#add_pkg[*]}
+
+
+# 設定読み込み
+if [[ ! -f $settings_path || -z $settings_path ]]; then
+    settings
+else
     source $settings_path
-
-    
+fi
 
 
 ## 関数定義
