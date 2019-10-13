@@ -41,6 +41,8 @@ function settings () {
     grub_background=
     # オーバーレイで追加するディレクトリ（ここで指定するディレクトリは/として認識されます。この値を設定する場合は非常に注意してください。デフォルトでは空です。）
     overlay_directory=
+    # カスタムリポジトリのディレクトリ（このディレクトリ直下に必ずアーキテクチャ別のディレクトリを作成し、その中に*.pkg.tar.xzを配置してください。指定したパッケージをインストールする場合は必ずadd_pkgでパッケージ名を指定してください。）
+    customrepo_directory=
 }
 
 
@@ -247,7 +249,7 @@ done
 
 
 ## Grub背景の置き換え
-if [[ -z $grub_background ]]; then
+if [[ -n $grub_background ]]; then
     if [[ ! -f $grub_background ]]; then
         red_log "Grub背景へのパスが正しくありません。"
         exit 1
@@ -257,12 +259,34 @@ fi
 
 
 ## オーバーレイディレクトリのコピー
-if [[ -z $overlay_directory ]]; then
+if [[ -n $overlay_directory ]]; then
     if [[ ! -d $overlay_directory ]]; then
         red_log "オーバーレイディレクトリの設定が不正です。"
         exit 0
     fi
     cp -ri $overlay_directory $working_directory/airootfs
+fi
+
+
+## カスタムリポジトリの追加
+if [[ -n $customrepo_directory  ]]; then
+    if [[ ! -d $customrepo_directory ]]; then
+        red_log "カスタムリポジトリのディレクトリが存在しません。"
+        exit 1
+    fi
+    if [[ ! -d $customrepo_directory/$make_arch ]]; then
+        red_log "アーキテクチャ別のカスタムリポジトリのディレクトリが存在しません。"
+        red_log "$customrepo_directory直下にアーキテクチャ別のディレクトリを作成して、その中にpkg.tar.xzを入れてください。"
+        exit 1
+    fi
+    cd $customrepo_directory/$make_arch
+    repo-add customrepo.db.tar.gz *.pkg.tar.xz
+    cd $customrepo_directory
+    echo -e "
+    [customrepo]\n
+    SigLevel = Optional TrustAll\n
+    Server = file://$working_directory/$make_arch\n
+    " >> $working_directory/pacman.conf
 fi
 
 
