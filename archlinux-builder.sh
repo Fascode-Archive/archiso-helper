@@ -92,7 +92,7 @@ function package_check () {
 }
 
 function user_check () {
-    if [[ $(getent passwd $1 > /dev/null 2&>1; printf $?) = 0 ]]; then
+    if [[ $(getent passwd $1 > /dev/null ; printf $?) = 0 ]]; then
         printf 0
         return 0
     else
@@ -188,7 +188,7 @@ if [[ ! -d $working_directory ]]; then
     mkdir -p $working_directory
     chmod 755 $working_directory
 else
-    if [[ -z $query ]]; 
+    if [[ -z $query ]];  then
         yn=$query
     else
         printf "Working directory already exists. Do you want to initialize it? :"
