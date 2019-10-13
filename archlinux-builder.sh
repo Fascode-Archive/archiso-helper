@@ -37,6 +37,8 @@ function settings () {
     i686_build_script=$current_scriput_dir/build_i686.sh
     # archisoの設定プロファイルへのパス
     archiso_configs="/usr/share/archiso/configs/releng"
+    # Grubの背景（フルパスで記述してください。デフォルトは空です。）
+    grub_background=
 }
 
 
@@ -240,6 +242,16 @@ fi
 for (( i=0; i<number_of_pkg ; i++ )); do
     echo ${add_pkg[$i]} >> $working_directory/package.$make_arch
 done 
+
+
+## Grub背景の置き換え
+if [[ -z $grub_background ]]; then
+    if [[ ! -f $grub_background ]]; then
+        red_log "Grub背景へのパスが正しくありません。"
+        exit 1
+    fi
+    cp $grub_background $working_directory/syslinux/splash.png
+fi
 
 
 ## ISO作成
