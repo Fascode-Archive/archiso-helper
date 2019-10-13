@@ -17,10 +17,12 @@ settings () {
     add_pkg=(linux networkmanager)
     # 所有ユーザー名（作成後のISOイメージファイルの所有者）
     user=root
-    # 所有グループ名（作成後のISOイメージファイルの所有グループ）
+    # 所有グループ名（作成後のISOイメージファイルの所有グループ 空でwheelに設定）
     group=
     # 作成後のファイル権限
     perm=664
+    #対話時の自動返答（「yes」もしくは「no」空で自動返答を無効化）
+    query=
 
     # archisoのパッケージ名です。(AURのパッケージ名にする場合はAURHelperを有効化してください。)
     archiso_package_name="archiso"
@@ -186,8 +188,12 @@ if [[ ! -d $working_directory ]]; then
     mkdir -p $working_directory
     chmod 755 $working_directory
 else
-    printf "Working directory already exists. Do you want to initialize it? :"
-    read yn
+    if [[ -z $query ]]; 
+        yn=$query
+    else
+        printf "Working directory already exists. Do you want to initialize it? :"
+        read yn
+    fi
     function del () {
         rm -rf $working_directory
     }
