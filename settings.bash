@@ -8,6 +8,12 @@ image_file_path="/home/archlinux-${year}.${month}.${day}-x86_64.iso"
 make_arch=x86_64
 # 追加するパッケージ
 add_pkg=(linux networkmanager)
+    # 所有ユーザー名（作成後のISOイメージファイルの所有者）
+    user=root
+    # 所有グループ名（作成後のISOイメージファイルの所有グループ）
+    group=
+    # 作成後のファイル権限
+    perm=664
 
 # archisoのパッケージ名です。(AURのパッケージ名にする場合はAURHelperを有効化してください。)
 archiso_package_name="archiso"
