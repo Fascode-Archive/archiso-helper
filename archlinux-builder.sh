@@ -39,6 +39,8 @@ function settings () {
     archiso_configs="/usr/share/archiso/configs/releng"
     # Grubの背景（フルパスで記述してください。デフォルトは空です。）
     grub_background=
+    # オーバーレイで追加するディレクトリ（ここで指定するディレクトリは/として認識されます。この値を設定する場合は非常に注意してください。デフォルトでは空です。）
+    overlay_directory=
 }
 
 
@@ -251,6 +253,16 @@ if [[ -z $grub_background ]]; then
         exit 1
     fi
     cp $grub_background $working_directory/syslinux/splash.png
+fi
+
+
+## オーバーレイディレクトリのコピー
+if [[ -z $overlay_directory ]]; then
+    if [[ ! -d $overlay_directory ]]; then
+        red_log "オーバーレイディレクトリの設定が不正です。"
+        exit 0
+    fi
+    cp -ri $overlay_directory $working_directory/airootfs
 fi
 
 
