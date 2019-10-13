@@ -157,7 +157,6 @@ if [[ -z $local_archiso_version ]]; then
     local_archiso_version=$(pacman -Q | grep " $archiso_package_name" | awk '{print $2}')
 fi
 
-
 if [[ $(package_check $archiso_package_name ; printf $?) = 1 ]]; then
     yellow_log "ArchISO is not installed."
     yellow_log "Install ArchISO."
