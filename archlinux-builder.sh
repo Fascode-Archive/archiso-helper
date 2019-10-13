@@ -6,7 +6,7 @@ settings_path=$(pwd)/settings.bash
 
 
 ## 変数定義（この設定は設定ファイルがない場合にのみ適用されます。）
-settings () {
+function settings () {
     # このディレクトリ内に設定ファイル等を作成するため空のディレクトリを指定することをおすすめします。
     working_directory="/home/archlinux-latest-livecd-builder"
     # フルパスで表記してください。それぞれ${yaer}、${month}、${day}で年、月、日に置き換えることができます。
