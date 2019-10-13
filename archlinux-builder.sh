@@ -300,6 +300,16 @@ if [[ -n $overlay_directory ]]; then
 fi
 
 
+## customized_airootfs.shのコピー
+if [[ -n $customize_airootfs_path ]]; then
+    if [[ ! -f $customize_airootfs_path ]]; then
+        red_log "customized_airootfs.shへのパスが不正です。"
+        exit 1
+    fi
+    cp -i $customize_airootfs_path $working_directory/airootfs/root/customize_airootfs.sh
+fi
+
+
 ## カスタムリポジトリの追加
 if [[ -n $customrepo_directory  ]]; then
     if [[ ! -d $customrepo_directory ]]; then
