@@ -15,6 +15,12 @@ settings () {
     make_arch=x86_64
     # 追加するパッケージ
     add_pkg=(linux networkmanager)
+    # 所有ユーザー名（作成後のISOイメージファイルの所有者）
+    user=root
+    # 所有グループ名（作成後のISOイメージファイルの所有グループ）
+    group=
+    # 作成後のファイル権限
+    perm=664
 
     # archisoのパッケージ名です。(AURのパッケージ名にする場合はAURHelperを有効化してください。)
     archiso_package_name="archiso"
@@ -83,6 +89,16 @@ function package_check () {
     fi
 }
 
+function user_check () {
+    if [[ $(getent passwd $1 > /dev/null 2&>1; printf $?) = 0 ]]; then
+        printf 0
+        return 0
+    else
+        printf 1
+        return 1
+    fi
+}
+
 
 ## Rootチェック
 if [[ ! $UID = 0 ]]; then
@@ -120,6 +136,7 @@ if [[ -f $image_file_path ]]; then
     exit 1
 fi
 
+
 ## アーキテクチャチェック
 case $make_arch in
     i686 ) : ;;
@@ -127,6 +144,14 @@ case $make_arch in
     * ) red_log "This architecture is illegal." 
         exit 1 ;;
 esac
+
+
+## ユーザーチェック
+if [[ ! $(user_check $user ) = 0 ]]; then
+    red_log "User $user is not exist."
+    exit 1
+fi
+
 
 ## ArchISOインストール、アップグレード
 if [[ -z $remote_archiso_version ]]; then
@@ -210,19 +235,31 @@ for (( i=0; i<number_of_pkg ; i++ )); do
     echo ${add_pkg[$i]} >> $working_directory/package.$make_arch
 done 
 
+
 ## ISO作成
 blue_log "Start building ArchLinux LiveCD."
 cd $working_directory
 ./build.sh -v
 
-## 最終処理
+
+## イメージファイル移動
 if [[ -z $( ls $working_directory/out ) ]]; then
     red_log "The image file that should have existed does not exist."
     red_log "Please run the script again."
     exit 1
 fi
 mv $working_directory/out/* $image_file_path
-chmod 775 $image_file_path
+
+
+## 権限変更
+if [[ -z $group ]]; then
+    group=wheel
+fi
+chown $user:$group  $image_file_path
+chmod $perm $image_file_path
+
+
+## 作成後メッセージ
 if [[ -f $image_file_path ]]; then
     blue_log "Created ArchLinux Live CD in $image_file_path"
 else
@@ -230,6 +267,9 @@ else
     red_log "The file may be in $working_directory/out/ ."
     exit 1
 fi
+
+
+## 作業ディレクトリ削除
 if [[ -d $working_directory ]]; then
     rm -rf $working_directory
 else
