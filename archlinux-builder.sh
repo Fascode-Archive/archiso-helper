@@ -24,10 +24,8 @@ function settings () {
     #対話時の自動返答（「yes」もしくは「no」空で自動返答を無効化）
     query=
 
-    # archisoのパッケージ名です。(AURのパッケージ名にする場合はAURHelperを有効化してください。)
+    # archisoのパッケージ名です。(AURのパッケージ名にする場合は事前にインストールしておいてください。)
     archiso_package_name="archiso"
-    # AURHelperの使用を強制する場合にのみpacmanから変更してください。もし存在しないAURHelperが入力された場合はpacmanが使用されます。また、AURHelperはpacmanと同じ構文のもののみ利用可能です。
-    aur_helper="pacman" 
     # メッセージの出力（0=有効 1=無効 それ以外=有効）
     bluelog=0 
     # これらの値を変更するとArchISOのバージョン判定が正常に行えなくなります。ArchISOのバージョンを固定する場合にのみ、両方の値を変更してください。（両方の値は必ず一致させてください。）
@@ -128,16 +126,6 @@ else
 fi
 
 
-## AUR Helperチェック
-if [[ $(package_check $aur_helper ; printf $? ) = 1 || $aur_helper = "pacman" ]]; then
-    pacman=pacman
-else
-    blue_log "Found AUR_Helper $aur_helper."
-    blue_log "Use $aur_helper"
-    pacman=$aur_helper
-fi
-
-
 ## 出力先チェック
 if [[ -f $image_file_path ]]; then
     red_log "A file with the same name exists."
@@ -163,25 +151,36 @@ fi
 
 ## ArchISOインストール、アップグレード
 if [[ -z $remote_archiso_version ]]; then
-    remote_archiso_version=$(pacman -Ss archiso | awk '{print $2}' | head -n 1)
+    remote_archiso_version=$(pacman -Ss  $archiso_package_name  | awk '{print $2}' | head -n 1)
 fi
 if [[ -z $local_archiso_version ]]; then
-    local_archiso_version=$(pacman -Q | grep "archiso" | awk '{print $2}')
+    local_archiso_version=$(pacman -Q | grep " $archiso_package_name" | awk '{print $2}')
 fi
+
 
 if [[ $(package_check $archiso_package_name ; printf $?) = 1 ]]; then
     yellow_log "ArchISO is not installed."
     yellow_log "Install ArchISO."
-    $pacman -Syy --noconfirm
-    $pacman -S --noconfirm archiso
+    if [[ $archiso_package_name = "archiso" ]]; then
+        pacman -Syy --noconfirm
+        pacman -S --noconfirm archiso
+    else
+        red_log "手動で$archiso_package_nameをインストールしてください。"
+        exit 1
+    fi
 elif [[ $local_archiso_version < $remote_archiso_version ]]; then
     yellow_log "ArchISO is installed."
     yellow_log "But ArchISO is older."
     yellow_log "Upgrade ArchISO."
     yellow_log "Installed  version: $local_archiso_version"
     yellow_log "Repository version: $remote_archiso_version"
-    $pacman -Syy --noconfirm
-    $pacman -S --noconfirm archiso
+    if [[ $archiso_package_name = "archiso" ]]; then
+        pacman -Syy --noconfirm
+        pacman -S --noconfirm archiso
+    else
+        red_log "手動で$archiso_package_nameをインストールしてください。"
+        exit 1
+    fi
 elif [[ $local_archiso_version > $remote_archiso_version ]]; then
     yellow_log "Installed ArchISO is newer than official repository."
     yellow_log "Installed  version: $local_archiso_version"
@@ -201,6 +200,7 @@ else
         read yn
     fi
     function del () {
+        blue_log "作業ディレクトリを削除しています。"
         rm -rf $working_directory
     }
     case $yn in
@@ -221,6 +221,7 @@ fi
 
 ## ArchISOプロファイルコピー
 if [[ -d $archiso_configs ]]; then
+blue_log "作業ディレクトリをコピーしています。"
     cp -r $archiso_configs/* $working_directory
     if [[ $make_arch = "i686" ]]; then
         if [[ ! -f $i686_build_script ]]; then
@@ -243,6 +244,7 @@ fi
 
 
 ## カスタムパッケージの追記
+blue_log "カスタムパッケージをリストに追加しています..."
 for (( i=0; i<number_of_pkg ; i++ )); do
     echo ${add_pkg[$i]} >> $working_directory/package.$make_arch
 done 
@@ -264,6 +266,7 @@ if [[ -n $overlay_directory ]]; then
         red_log "オーバーレイディレクトリの設定が不正です。"
         exit 0
     fi
+    blue_log "オーバーレイディレクトリをコピーしています..."
     cp -ri $overlay_directory $working_directory/airootfs
 fi
 
@@ -280,8 +283,10 @@ if [[ -n $customrepo_directory  ]]; then
         exit 1
     fi
     cd $customrepo_directory/$make_arch
+    "パッケージリストを生成します。"
     repo-add customrepo.db.tar.gz *.pkg.tar.xz
-    cd $customrepo_directory
+    cd $current_scriput_dir
+    blue_log "カスタムパッケージを登録します。"
     echo -e "
     [customrepo]\n
     SigLevel = Optional TrustAll\n
@@ -306,11 +311,21 @@ mv $working_directory/out/* $image_file_path
 
 
 ## 権限変更
+blue_log "イメージファイルの権限を変更します。"
 if [[ -z $group ]]; then
     group=wheel
 fi
 chown $user:$group  $image_file_path
 chmod $perm $image_file_path
+
+
+## 作業ディレクトリ削除
+if [[ -d $working_directory ]]; then
+    blue_log "作業ディレクトリを削除しています。"
+    rm -rf $working_directory
+else
+    red_log "$working_directory is not found."
+fi
 
 
 ## 作成後メッセージ
@@ -320,12 +335,4 @@ else
     red_log "The image file could not be moved."
     red_log "The file may be in $working_directory/out/ ."
     exit 1
-fi
-
-
-## 作業ディレクトリ削除
-if [[ -d $working_directory ]]; then
-    rm -rf $working_directory
-else
-    red_log "$working_directory is not found."
 fi
