@@ -80,7 +80,6 @@ month=`date "+%m"`
 day=`date "+%d"`
 current_scriput_path=$(realpath "$0")
 current_scriput_dir=$(pwd)
-number_of_pkg=${#add_pkg[*]}
 
 
 # 設定読み込み
@@ -93,6 +92,7 @@ else
         settings
     fi
 fi
+number_of_pkg=${#add_pkg[*]}
 
 
 ## 関数定義
@@ -275,7 +275,7 @@ fi
 ## カスタムパッケージの追記
 blue_log "カスタムパッケージをリストに追加しています..."
 for (( i=0; i<number_of_pkg ; i++ )); do
-    echo ${add_pkg[$i]} >> $working_directory/package.$make_arch
+    echo ${add_pkg[$i]} >> $working_directory/packages.$make_arch
 done 
 
 
