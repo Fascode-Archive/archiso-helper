@@ -186,7 +186,7 @@ fi
 if [[ $bluelog = 1 ]]; then
     yellow_log "ログは無効化されています。"
 fi
-if [[ ! $archiso_configs = "/usr/share/archiso/configs/releng" ] ]; then
+if [[ ! $archiso_configs = "/usr/share/archiso/configs/releng" ]]; then
     yellow_log "設定プロファイルへのパスは「$archiso_configs」へと変更されています。"
 fi
 if [[ -n $grub_background ]]; then
