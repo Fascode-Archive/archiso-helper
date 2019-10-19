@@ -60,6 +60,7 @@ function settings () {
 
     ## オーバーレイで追加するディレクトリ
     # ここで指定するディレクトリは/として認識されます。この値を設定する場合は非常に注意してください。デフォルトでは空です。
+    # ArchISOのオーバーレイディレクトリを編集することをおすすめします。
     overlay_directory=
 
     ## カスタムリポジトリのディレクトリ
@@ -176,6 +177,29 @@ esac
 if [[ ! $(user_check $user ) = 0 ]]; then
     red_log "User $user is not exist."
     exit 1
+fi
+
+## デバッグ変数の表示
+if [[ ! $archiso_package_name = "archiso" ]]; then
+    yellow_log "ArchISOのパッケージ名は「$archiso_package_name」に設定されています。"
+fi
+if [[ $bluelog = 1 ]]; then
+    yellow_log "ログは無効化されています。"
+fi
+if [[ ! $archiso_configs = "/usr/share/archiso/configs/releng" ] ]; then
+    yellow_log "設定プロファイルへのパスは「$archiso_configs」へと変更されています。"
+fi
+if [[ -n $grub_background ]]; then
+    yellow_log "Grub背景が「$grub_background」に設定されています。"
+fi
+if [[ -n $overlay_directory ]]; then
+    yellow_log "オーバーレイディレクトリが「$overlay_directory」に設定されています。"
+fi
+if [[ -n $customrepo_directory]]; then
+    yellow_log "カスタムリポジトリは「$customrepo_directory」に設定されています。"
+fi
+if [[ -n $customize_airootfs_path ]]; then
+    yellow_log "customize_airootfs.shのパスは「$customize_airootfs_path」に設定されています。"
 fi
 
 
@@ -305,10 +329,10 @@ if [[ -n $overlay_directory ]]; then
 fi
 
 
-## customized_airootfs.shのコピー
+## customize_airootfs.shのコピー
 if [[ -n $customize_airootfs_path ]]; then
     if [[ ! -f $customize_airootfs_path ]]; then
-        red_log "customized_airootfs.shへのパスが不正です。"
+        red_log "customize_airootfs.shへのパスが不正です。"
         exit 1
     fi
     cp -i $customize_airootfs_path $working_directory/airootfs/root/customize_airootfs.sh
