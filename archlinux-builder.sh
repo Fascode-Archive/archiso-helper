@@ -137,6 +137,10 @@ function user_check () {
     fi
 }
 
+function install_pacman () {
+    pacman -Syy --noconfirm
+    pacman -S --noconfirm $@
+}
 
 ## Rootチェック
 if [[ ! $UID = 0 ]]; then
@@ -150,11 +154,20 @@ if [[ -f /etc/os-release ]]; then
     source /etc/os-release
     if [[ ! $ID = "arch" ]]; then
         red_log "The script is able to run in ArchLinux only."
-        exit 1
+        #exit 1
     fi
 else
-    red_log "There is not /etc/os-release."
-    exit 1
+    if [[ -n $(find /usr/bin/ -name "pacman" 2> /dev/null) ]]; then
+        install_pacman lsb-release
+        source  /etc/lsb-release
+        if [[ ! $DISTRIB_ID = "Arch" ]]; then
+            red_log "The script is able to run in ArchLinux only."
+            #exit 1
+        fi
+    else
+        red_log "pacmanが見つからなかったため実行できませんでした。"
+        #exit 1
+    fi
 fi
 
 
@@ -221,8 +234,7 @@ if [[ $(package_check $archiso_package_name ; printf $?) = 1 ]]; then
     yellow_log "ArchISO is not installed."
     yellow_log "Install ArchISO."
     if [[ $archiso_package_name = "archiso" ]]; then
-        pacman -Syy --noconfirm
-        pacman -S --noconfirm archiso
+        install_pacman archiso
     else
         red_log "手動で$archiso_package_nameをインストールしてください。"
         exit 1
@@ -234,8 +246,7 @@ elif [[ $local_archiso_version < $remote_archiso_version ]]; then
     yellow_log "Installed  version: $local_archiso_version"
     yellow_log "Repository version: $remote_archiso_version"
     if [[ $archiso_package_name = "archiso" ]]; then
-        pacman -Syy --noconfirm
-        pacman -S --noconfirm archiso
+        install_pacman archiso
     else
         red_log "手動で$archiso_package_nameをインストールしてください。"
         exit 1
