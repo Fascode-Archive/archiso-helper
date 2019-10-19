@@ -47,7 +47,7 @@ function settings () {
     ## archisoのバージョンを固定
     # これらの値を変更するとArchISOのバージョン判定が正常に行えなくなります。（両方の値は必ず一致させてください。）
     local_archiso_version=
-    remote_archiso_version= 
+    remote_archiso_version=
 
     ##  i686用ビルドスクリプトへのパス
     i686_build_script=$current_scriput_dir/build_i686.sh
@@ -182,9 +182,14 @@ fi
 ## ArchISOインストール、アップグレード
 if [[ -z $remote_archiso_version ]]; then
     remote_archiso_version=$(pacman -Ss  $archiso_package_name  | awk '{print $2}' | head -n 1)
+else
+    yellow_log "リモートのarchisoのバージョンは「$remote_archiso_version」で固定されています。"
 fi
+
 if [[ -z $local_archiso_version ]]; then
     local_archiso_version=$(pacman -Q | grep " $archiso_package_name" | awk '{print $2}')
+else
+    yellow_log "ローカルのarchisoのバージョンは「$local_archiso_version」で固定されています。"
 fi
 
 if [[ $(package_check $archiso_package_name ; printf $?) = 1 ]]; then

@@ -41,7 +41,7 @@ function settings () {
     ## archisoのバージョンを固定
     # これらの値を変更するとArchISOのバージョン判定が正常に行えなくなります。（両方の値は必ず一致させてください。）
     local_archiso_version=
-    remote_archiso_version= 
+    remote_archiso_version=
 
     ##  i686用ビルドスクリプトへのパス
     i686_build_script=$current_scriput_dir/build_i686.sh
