@@ -11,14 +11,15 @@ function settings () {
     # このディレクトリ内に設定ファイル等を作成するため空のディレクトリを指定することをおすすめします。
     working_directory="/home/archlinux-latest-livecd-builder"
 
-    ## 作成後のイメージファイルのパス
-    # フルパスで表記してください。それぞれ${yaer}、${month}、${day}で年、月、日に置き換えることができます。
-    # ここの値が不正な場合、失敗するか作業ディレクトリ/outに作成されます。
-    image_file_path="/home/archlinux-${year}.${month}.${day}-x86_64.iso"
-
     ## 生成したいアーキテクチャ
     # i686 or x86_64）を入力してください（i686は非公式リポジトリを使用します。
     make_arch=x86_64
+
+    ## 作成後のイメージファイルのパス
+    # フルパスで表記してください。それぞれ${yaer}、${month}、${day}で年、月、日に置き換えることができます。
+    # ${make_arch}で生成するアーキテクチャに置き換えることができます。
+    # ここの値が不正な場合、失敗するか作業ディレクトリ/outに作成されます。
+    image_file_path="/home/archlinux-${year}.${month}.${day}-${make_arch}.iso"
 
     ## 追加するパッケージ
     add_pkg=(linux networkmanager)
