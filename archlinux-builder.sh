@@ -255,7 +255,7 @@ blue_log "作業ディレクトリをコピーしています。"
     if [[ $make_arch = "i686" ]]; then
         if [[ ! -f $i686_build_script ]]; then
             red_log "i686's build.sh is not exist."
-            exit 1
+             wget https://raw.githubusercontent.com/Hayao0819/archlinux-latest-livecd-builder/master/build_i686.sh
         else
             rm $working_directory/build.sh
             cp $i686_build_script $working_directory/build.sh
