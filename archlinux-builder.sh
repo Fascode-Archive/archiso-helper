@@ -235,7 +235,7 @@ fi
 if [[ -n $overlay_directory ]]; then
     yellow_log $debug_overlay_dir
 fi
-if [[ -n $customrepo_directory]]; then
+if [[ -n $customrepo_directory ]]; then
     yellow_log   $debug_customrepo
 fi
 if [[ -n $customize_airootfs_path ]]; then
@@ -251,7 +251,7 @@ else
 fi
 
 if [[ -z $local_archiso_version ]]; then
-    local_archiso_version=$(pacman -Q | grep " $archiso_package_name" | awk '{print $2}')
+    local_archiso_version=$(pacman -Q | grep "$archiso_package_name" | awk '{print $2}')
 else
     yellow_log  $debug_local_archiso_ver
 fi
