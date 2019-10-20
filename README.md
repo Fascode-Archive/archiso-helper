@@ -12,7 +12,10 @@ sudo ./archlinux-builder.sh
 
 # 追加のファイルについて
 settings.bashやbuild_i686.shは必須ではありません。
-archlinux-builder.bash単体でも利用可能です。
+
+## message.bash
+必須のファイルです。単体で実行した場合は自動でダウンロードされます。  
+このファイルを編集することで言語を追加できます。
 
 ## settings.bash
 設定を記述したファイルです。archlinux_builder.bashを更新した際に設定を保存できるファイルです。  
