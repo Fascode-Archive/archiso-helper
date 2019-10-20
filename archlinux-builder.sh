@@ -43,8 +43,7 @@ function settings () {
     query=
 
     ##メッセージファイルへのパス
-    #(現在適用されません)
-    message_file_path=
+    message_file_path=$current_scriput_dir/message.conf 
 
     ###以下の設定は下手に変更すると重大な影響を及ぼします。必要な場合を除いて変更しないでください。
 
@@ -155,10 +154,10 @@ function install_pacman () {
 
 
 ## メッセージ取得
-if [[ ! -f $current_scriput_dir/message.conf ]]; then
-    wget -O $current_scriput_dir/message.conf  https://raw.githubusercontent.com/Hayao0819/archlinux-latest-livecd-builder/master/message.conf
+if [[ ! -f $message_file_path ]]; then
+    wget -O $message_file_path  https://raw.githubusercontent.com/Hayao0819/archlinux-latest-livecd-builder/master/message.conf
 fi
-source $current_scriput_dir/message.conf
+source $message_file_path
 if [[ -z $(type -t $msg_language) ]]; then
     red_log "The language is not currently available."
     exit 1
