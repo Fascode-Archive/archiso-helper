@@ -108,21 +108,6 @@ fi
 number_of_pkg=${#add_pkg[*]}
 
 
-## メッセージ取得
-if [[ ! -f $current_scriput_dir/message.conf ]]; then
-    wget -O $current_scriput_dir/message.conf  https://raw.githubusercontent.com/Hayao0819/archlinux-latest-livecd-builder/master/message.conf
-fi
-source $current_scriput_dir/message.conf
-if [[ -z $(type -t $msg_language) ]]; then
-    red_log "The language is not currently available."
-    exit 1
-elif [[ ! $(type -t $msg_language) = "function" ]]; then
-    red_log "The language is not currently available."
-    exit 1
-fi
-$msg_language
-
-
 ## 関数定義
 function red_log () {
     echo -e "\033[0;31m$@\033[0;39m" >&2
@@ -167,6 +152,22 @@ function install_pacman () {
     pacman -Syy --noconfirm
     pacman -S --noconfirm $@
 }
+
+
+## メッセージ取得
+if [[ ! -f $current_scriput_dir/message.conf ]]; then
+    wget -O $current_scriput_dir/message.conf  https://raw.githubusercontent.com/Hayao0819/archlinux-latest-livecd-builder/master/message.conf
+fi
+source $current_scriput_dir/message.conf
+if [[ -z $(type -t $msg_language) ]]; then
+    red_log "The language is not currently available."
+    exit 1
+elif [[ ! $(type -t $msg_language) = "function" ]]; then
+    red_log "The language is not currently available."
+    exit 1
+fi
+$msg_language
+
 
 ## Rootチェック
 if [[ ! $UID = 0 ]]; then
