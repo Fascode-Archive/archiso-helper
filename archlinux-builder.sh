@@ -7,6 +7,11 @@ settings_path=$(pwd)/settings.bash
 
 ## 変数定義（この設定は設定ファイルがない場合にのみ適用されます。）
 function settings () {
+
+    ##言語
+    #現在、enもしくはjaが使用可能です。 
+    msg_language="en"
+
     ## 作業ディレクトリ
     # このディレクトリ内に設定ファイル等を作成するため空のディレクトリを指定することをおすすめします。
     working_directory="/home/archlinux-latest-livecd-builder"
@@ -28,12 +33,18 @@ function settings () {
     #作成後のISOイメージファイルの所有者
     user=root
 
-    # 所有グループ名（作成後のISOイメージファイルの所有グループ 空でwheelに設定）
+    ## 所有グループ名（作成後のISOイメージファイルの所有グループ 空でwheelに設定）
     group=
-    # 作成後のファイル権限
+
+    ## 作成後のファイル権限
     perm=664
-    #対話時の自動返答（「yes」もしくは「no」空で自動返答を無効化）
+
+    ##対話時の自動返答（「yes」もしくは「no」空で自動返答を無効化）
     query=
+
+    ##メッセージファイルへのパス
+    #(現在適用されません)
+    message_file_path=
 
     ###以下の設定は下手に変更すると重大な影響を及ぼします。必要な場合を除いて変更しないでください。
 
@@ -84,7 +95,7 @@ current_scriput_path=$(realpath "$0")
 current_scriput_dir=$(pwd)
 
 
-# 設定読み込み
+## 設定読み込み
 if [[ ! -f $settings_path || -z $settings_path ]]; then
     settings
 else
@@ -95,6 +106,21 @@ else
     fi
 fi
 number_of_pkg=${#add_pkg[*]}
+
+
+## メッセージ取得
+if [[ ! -f $current_scriput_dir/message.conf ]]; then
+    wget -O $current_scriput_dir/message.conf  https://raw.githubusercontent.com/Hayao0819/archlinux-latest-livecd-builder/master/message.conf
+fi
+source $current_scriput_dir/message.conf
+if [[ -z $(type -t $msg_language) ]]; then
+    red_log "The language is not currently available."
+    exit 1
+elif [[ ! $(type -t $msg_language) = "function" ]]; then
+    red_log "The language is not currently available."
+    exit 1
+fi
+$msg_language
 
 
 ## 関数定義
@@ -144,7 +170,7 @@ function install_pacman () {
 
 ## Rootチェック
 if [[ ! $UID = 0 ]]; then
-    red_log "You need root permission."
+    red_log $error_root
     exit 1
 fi
 
@@ -153,7 +179,7 @@ fi
 if [[ -f /etc/os-release ]]; then
     source /etc/os-release
     if [[ ! $ID = "arch" ]]; then
-        red_log "The script is able to run in ArchLinux only."
+        red_log $error_archlinux
         #exit 1
     fi
 else
@@ -161,11 +187,11 @@ else
         install_pacman lsb-release
         source  /etc/lsb-release
         if [[ ! $DISTRIB_ID = "Arch" ]]; then
-            red_log "The script is able to run in ArchLinux only."
+            red_log $error_archlinux
             #exit 1
         fi
     else
-        red_log "pacmanが見つからなかったため実行できませんでした。"
+        red_log $error_pacman
         #exit 1
     fi
 fi
@@ -173,7 +199,7 @@ fi
 
 ## 出力先チェック
 if [[ -f $image_file_path ]]; then
-    red_log "A file with the same name exists."
+    red_log $error_filename
     exit 1
 fi
 
@@ -182,38 +208,38 @@ fi
 case $make_arch in
     i686 ) : ;;
     x86_64 ) : ;;
-    * ) red_log "This architecture is illegal." 
+    * ) red_log $error_architecture
         exit 1 ;;
 esac
 
 
 ## ユーザーチェック
 if [[ ! $(user_check $user ) = 0 ]]; then
-    red_log "User $user is not exist."
+    red_log $error_user
     exit 1
 fi
 
 ## デバッグ変数の表示
 if [[ ! $archiso_package_name = "archiso" ]]; then
-    yellow_log "ArchISOのパッケージ名は「$archiso_package_name」に設定されています。"
+    yellow_log $debug_archiso_package_name
 fi
 if [[ $bluelog = 1 ]]; then
-    yellow_log "ログは無効化されています。"
+    yellow_log $debug_log
 fi
 if [[ ! $archiso_configs = "/usr/share/archiso/configs/releng" ]]; then
-    yellow_log "設定プロファイルへのパスは「$archiso_configs」へと変更されています。"
+    yellow_log $debug_archiso_conf
 fi
 if [[ -n $grub_background ]]; then
-    yellow_log "Grub背景が「$grub_background」に設定されています。"
+    yellow_log $debug_grub_background
 fi
 if [[ -n $overlay_directory ]]; then
-    yellow_log "オーバーレイディレクトリが「$overlay_directory」に設定されています。"
+    yellow_log $debug_overlay_dir
 fi
 if [[ -n $customrepo_directory]]; then
-    yellow_log "カスタムリポジトリは「$customrepo_directory」に設定されています。"
+    yellow_log   $debug_customrepo
 fi
 if [[ -n $customize_airootfs_path ]]; then
-    yellow_log "customize_airootfs.shのパスは「$customize_airootfs_path」に設定されています。"
+    yellow_log $debug_airootfs
 fi
 
 
@@ -221,40 +247,40 @@ fi
 if [[ -z $remote_archiso_version ]]; then
     remote_archiso_version=$(pacman -Ss  $archiso_package_name  | awk '{print $2}' | head -n 1)
 else
-    yellow_log "リモートのarchisoのバージョンは「$remote_archiso_version」で固定されています。"
+    yellow_log $debug_remote_archiso_ver
 fi
 
 if [[ -z $local_archiso_version ]]; then
     local_archiso_version=$(pacman -Q | grep " $archiso_package_name" | awk '{print $2}')
 else
-    yellow_log "ローカルのarchisoのバージョンは「$local_archiso_version」で固定されています。"
+    yellow_log  $debug_local_archiso_ver
 fi
 
 if [[ $(package_check $archiso_package_name ; printf $?) = 1 ]]; then
-    yellow_log "ArchISO is not installed."
-    yellow_log "Install ArchISO."
+    yellow_log $log_archiso_not_installed
+    yellow_log $log_install_archiso
     if [[ $archiso_package_name = "archiso" ]]; then
         install_pacman archiso
     else
-        red_log "手動で$archiso_package_nameをインストールしてください。"
+        red_log $error_custom_archiso
         exit 1
     fi
 elif [[ $local_archiso_version < $remote_archiso_version ]]; then
-    yellow_log "ArchISO is installed."
-    yellow_log "But ArchISO is older."
-    yellow_log "Upgrade ArchISO."
-    yellow_log "Installed  version: $local_archiso_version"
-    yellow_log "Repository version: $remote_archiso_version"
+    yellow_log $log_archiso_iinstalled
+    yellow_log $log_archiso_older
+    yellow_log $log_archiso_upgrade
+    yellow_log $log_remote_archiso_ver
+    yellow_log $log_local_archiso_ver
     if [[ $archiso_package_name = "archiso" ]]; then
         install_pacman archiso
     else
-        red_log "手動で$archiso_package_nameをインストールしてください。"
+        red_log $error_custom_archiso
         exit 1
     fi
 elif [[ $local_archiso_version > $remote_archiso_version ]]; then
-    yellow_log "Installed ArchISO is newer than official repository."
-    yellow_log "Installed  version: $local_archiso_version"
-    yellow_log "Repository version: $remote_archiso_version"
+    yellow_log $log_archiso_newer
+    yellow_log $log_remote_archiso_ver
+    yellow_log $log_local_archiso_ver
 fi
 
 
@@ -266,11 +292,11 @@ else
     if [[ -z $query ]];  then
         yn=$query
     else
-        printf "Working directory already exists. Do you want to initialize it? :"
+        printf $ask_delete_working_dir
         read yn
     fi
     function del () {
-        blue_log "作業ディレクトリを削除しています。"
+        blue_log $log_delete_working_dir
         rm -rf $working_directory
     }
     case $yn in
@@ -291,11 +317,11 @@ fi
 
 ## ArchISOプロファイルコピー
 if [[ -d $archiso_configs ]]; then
-blue_log "作業ディレクトリをコピーしています。"
+blue_log $log_copy_config_dir
     cp -r $archiso_configs/* $working_directory
     if [[ $make_arch = "i686" ]]; then
         if [[ ! -f $i686_build_script ]]; then
-            red_log "i686's build.sh is not exist."
+            red_log $error_i686_not_found
              wget https://raw.githubusercontent.com/Hayao0819/archlinux-latest-livecd-builder/master/build_i686.sh
         else
             rm $working_directory/build.sh
@@ -303,18 +329,18 @@ blue_log "作業ディレクトリをコピーしています。"
         fi
     fi
 else
-    red_log "There is not ArchISO profiles."
+    red_log $error_confg_not_found
     if [[ $archiso_configs = "/usr/share/archiso/configs/releng/" ]]; then
-        red_log "Please Install ArchISO."
+        red_log $error_install_archiso
     else
-        red_log "Please check setting "archiso_configs""
+        red_log $error_confg_not_found
     fi
     exit 1
 fi
 
 
 ## カスタムパッケージの追記
-blue_log "カスタムパッケージをリストに追加しています..."
+blue_log $log_add_packages
 for (( i=0; i<number_of_pkg ; i++ )); do
     echo ${add_pkg[$i]} >> $working_directory/packages.$make_arch
 done 
@@ -323,7 +349,7 @@ done
 ## Grub背景の置き換え
 if [[ -n $grub_background ]]; then
     if [[ ! -f $grub_background ]]; then
-        red_log "Grub背景へのパスが正しくありません。"
+        red_log $error_grub_background
         exit 1
     fi
     cp $grub_background $working_directory/syslinux/splash.png
@@ -333,10 +359,10 @@ fi
 ## オーバーレイディレクトリのコピー
 if [[ -n $overlay_directory ]]; then
     if [[ ! -d $overlay_directory ]]; then
-        red_log "オーバーレイディレクトリの設定が不正です。"
+        red_log $error_overlay_dir
         exit 0
     fi
-    blue_log "オーバーレイディレクトリをコピーしています..."
+    blue_log $log_copy_overlay_dir
     cp -ri $overlay_directory $working_directory/airootfs
 fi
 
@@ -344,7 +370,7 @@ fi
 ## customize_airootfs.shのコピー
 if [[ -n $customize_airootfs_path ]]; then
     if [[ ! -f $customize_airootfs_path ]]; then
-        red_log "customize_airootfs.shへのパスが不正です。"
+        red_log $error_customize_airootfs
         exit 1
     fi
     cp -i $customize_airootfs_path $working_directory/airootfs/root/customize_airootfs.sh
@@ -354,19 +380,19 @@ fi
 ## カスタムリポジトリの追加
 if [[ -n $customrepo_directory  ]]; then
     if [[ ! -d $customrepo_directory ]]; then
-        red_log "カスタムリポジトリのディレクトリが存在しません。"
+        red_log $error_customrepo_dir
         exit 1
     fi
     if [[ ! -d $customrepo_directory/$make_arch ]]; then
-        red_log "アーキテクチャ別のカスタムリポジトリのディレクトリが存在しません。"
-        red_log "$customrepo_directory直下にアーキテクチャ別のディレクトリを作成して、その中にpkg.tar.xzを入れてください。"
+        red_log $error_customrepo_architecture_dir
+        red_log $error_customrepo_setting_guide
         exit 1
     fi
     cd $customrepo_directory/$make_arch
-    "パッケージリストを生成します。"
+    blue_log $log_generate_package_list
     repo-add customrepo.db.tar.gz *.pkg.tar.xz
     cd $current_scriput_dir
-    blue_log "カスタムパッケージを登録します。"
+    blue_log $log_register_customrepo
     echo -e "
     [customrepo]\n
     SigLevel = Optional TrustAll\n
@@ -383,15 +409,15 @@ cd $working_directory
 
 ## イメージファイル移動
 if [[ -z $( ls $working_directory/out ) ]]; then
-    red_log "The image file that should have existed does not exist."
-    red_log "Please run the script again."
+    red_log $error_image_not_found
+    red_log $error_run_again
     exit 1
 fi
 mv $working_directory/out/* $image_file_path
 
 
 ## 権限変更
-blue_log "イメージファイルの権限を変更します。"
+blue_log $log_change_perm
 if [[ -z $group ]]; then
     group=wheel
 fi
@@ -401,18 +427,17 @@ chmod $perm $image_file_path
 
 ## 作業ディレクトリ削除
 if [[ -d $working_directory ]]; then
-    blue_log "作業ディレクトリを削除しています。"
+    blue_log $log_delete_working_dir
     rm -rf $working_directory
 else
-    red_log "$working_directory is not found."
+    red_log $error_working_dir_not_found
 fi
 
 
 ## 作成後メッセージ
 if [[ -f $image_file_path ]]; then
-    blue_log "Created ArchLinux Live CD in $image_file_path"
+    blue_log $log_image_builded
 else
-    red_log "The image file could not be moved."
-    red_log "The file may be in $working_directory/out/ ."
+    red_log $error_move_image
     exit 1
 fi
