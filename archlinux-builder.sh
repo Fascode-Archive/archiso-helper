@@ -43,7 +43,7 @@ function settings () {
     query=
 
     ##メッセージファイルへのパス
-    message_file_path=$current_scriput_dir/message.conf 
+    message_file_path=$current_scriput_dir/message.conf
 
     ###以下の設定は下手に変更すると重大な影響を及ぼします。必要な場合を除いて変更しないでください。
 
