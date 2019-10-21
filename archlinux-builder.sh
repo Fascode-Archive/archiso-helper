@@ -94,19 +94,6 @@ current_scriput_path=$(realpath "$0")
 current_scriput_dir=$(pwd)
 
 
-## 設定読み込み
-if [[ ! -f $settings_path || -z $settings_path ]]; then
-    settings
-else
-    source $settings_path
-    check_import=$?
-    if [[ ! $check_import = 0 ]]; then
-        settings
-    fi
-fi
-number_of_pkg=${#add_pkg[*]}
-
-
 ## 関数定義
 function red_log () {
     echo -e "\033[0;31m$@\033[0;39m" >&2
@@ -168,6 +155,21 @@ white_log "==================================="
 white_log "ArchLinux Latest LiveCD Builder"
 white_log "==================================="
 white_log
+
+
+## 設定読み込み
+if [[ ! -f $settings_path || -z $settings_path ]]; then
+    settings
+    blue_log "Loaded $current_script_path"
+else
+    source $settings_path
+    check_import=$?
+    if [[ ! $check_import = 0 ]]; then
+        settings
+    fi
+    blue_log "Loaded $settings_path"
+fi
+number_of_pkg=${#add_pkg[*]}
 
 
 ## メッセージ取得
@@ -306,7 +308,7 @@ if [[ ! -d $working_directory ]]; then
     mkdir -p $working_directory
     chmod 755 $working_directory
 else
-    if [[ -z $query ]];  then
+    if [[ -n $query ]];  then
         yn=$query
     else
         printf $ask_delete_working_dir
@@ -331,6 +333,7 @@ if [[ ! -d $working_directory/out/ ]]; then
     mkdir -p $working_directory/out/
     chmod 755 $working_directory/out/
 fi
+
 
 ## ArchISOプロファイルコピー
 if [[ -d $archiso_configs ]]; then
