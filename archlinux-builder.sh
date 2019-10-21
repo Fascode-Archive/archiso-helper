@@ -53,7 +53,7 @@ function settings () {
 
     ## メッセージの出力
     # 0=有効 1=無効 それ以外=有効
-    bluelog=0 
+    log=0 
 
     ## archisoのバージョンを固定
     # これらの値を変更するとArchISOのバージョン判定が正常に行えなくなります。（両方の値は必ず一致させてください。）
@@ -114,14 +114,23 @@ function red_log () {
 }
 
 function blue_log () {
-    if [[ ! $bluelog = 1 ]]; then
-    echo -e "\033[0;34m$@\033[0;39m"
+    if [[ ! $log = 1 ]]; then
+        echo -e "\033[0;34m$@\033[0;39m"
     fi
     return 0
 }
 
 function yellow_log () {
-    echo -e "\033[0;33m$@\033[0;39m" >&2
+    if [[ ! $log = 1 ]]; then
+        echo -e "\033[0;33m$@\033[0;39m" >&2
+    fi
+    return 0
+}
+
+function white_log () {
+    if [[ ! $log = 1 ]]; then
+        echo $@
+    fi
     return 0
 }
 
@@ -151,6 +160,14 @@ function install_pacman () {
     pacman -Syy --noconfirm
     pacman -S --noconfirm $@
 }
+
+
+## タイトル
+white_log
+white_log "==================================="
+white_log "ArchLinux Latest LiveCD Builder"
+white_log "==================================="
+white_log
 
 
 ## メッセージ取得
