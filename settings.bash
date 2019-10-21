@@ -1,6 +1,10 @@
 #!/usr/bin/env bash
 
 function settings () {
+    ##言語
+    #現在、enもしくはjaが使用可能です。 
+    msg_language="en"
+
     ## 作業ディレクトリ
     # このディレクトリ内に設定ファイル等を作成するため空のディレクトリを指定することをおすすめします。
     working_directory="/home/archlinux-latest-livecd-builder"
@@ -22,12 +26,17 @@ function settings () {
     #作成後のISOイメージファイルの所有者
     user=root
 
-    # 所有グループ名（作成後のISOイメージファイルの所有グループ 空でwheelに設定）
+    ## 所有グループ名（作成後のISOイメージファイルの所有グループ 空でwheelに設定）
     group=
-    # 作成後のファイル権限
+
+    ## 作成後のファイル権限
     perm=664
-    #対話時の自動返答（「yes」もしくは「no」空で自動返答を無効化）
+
+    ##対話時の自動返答（「yes」もしくは「no」空で自動返答を無効化）
     query=
+
+    ##メッセージファイルへのパス
+    message_file_path=$current_scriput_dir/message.conf
 
     ###以下の設定は下手に変更すると重大な影響を及ぼします。必要な場合を除いて変更しないでください。
 
