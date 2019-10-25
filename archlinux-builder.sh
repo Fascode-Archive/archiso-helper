@@ -6,6 +6,7 @@ settings_path=$(pwd)/settings.bash
 
 
 ## 変数定義（この設定は設定ファイルがない場合にのみ適用されます。）
+#もし設定ファイルに変数が存在しない場合はこの設定が上書きされます。
 function settings () {
 
     ##言語
@@ -162,6 +163,7 @@ if [[ ! -f $settings_path || -z $settings_path ]]; then
     settings
     blue_log "Loaded $current_script_path"
 else
+    settings
     source $settings_path
     check_import=$?
     if [[ ! $check_import = 0 ]]; then
