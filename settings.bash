@@ -1,6 +1,7 @@
 #!/usr/bin/env bash
 
 function settings () {
+
     ##言語
     #現在、enもしくはjaが使用可能です。 
     msg_language="en"
@@ -38,7 +39,12 @@ function settings () {
     ##メッセージファイルへのパス
     message_file_path=$current_scriput_dir/message.conf
 
+
     ###以下の設定は下手に変更すると重大な影響を及ぼします。必要な場合を除いて変更しないでください。
+
+
+    ##ネットワークチェックのURL
+    check_url="https://google.com"
 
     ## archisoのパッケージ名です。
     # AURのパッケージ名にする場合は事前にインストールしておいてください。)

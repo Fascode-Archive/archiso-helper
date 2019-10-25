@@ -46,7 +46,12 @@ function settings () {
     ##メッセージファイルへのパス
     message_file_path=$current_scriput_dir/message.conf
 
+
     ###以下の設定は下手に変更すると重大な影響を及ぼします。必要な場合を除いて変更しないでください。
+
+
+    ##ネットワークチェックのURL
+    check_url="https://google.com"
 
     ## archisoのパッケージ名です。
     # AURのパッケージ名にする場合は事前にインストールしておいてください。)
@@ -181,6 +186,16 @@ else
     blue_log "Loaded $settings_path"
 fi
 number_of_pkg=${#add_pkg[*]}
+
+
+## ネット接続確認
+blue_log "Checking network connection ..."
+if [[ ! $(ping $check_url  -c 1 >> /dev/null ; echo $?) = 0 ]]; then
+    red_log "There is no network connection."
+    exit 1
+else
+    blue_log "The network connection was confirmed."
+fi
 
 
 ## メッセージ取得
