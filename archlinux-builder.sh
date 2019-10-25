@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
 
-## 設定ファイルへのパス
+## 設定ファイルへのパス（引数で指定されていた場合は上書きされます。引数が間違っていた場合はこの設定が使用されます。）
 settings_path=$(pwd)/settings.bash
 
 
@@ -159,6 +159,9 @@ white_log
 
 
 ## 設定読み込み
+if [[ -n $1 && -f $1 ]]; then
+    settings_path=$1
+fi
 if [[ ! -f $settings_path || -z $settings_path ]]; then
     settings
     blue_log "Loaded $current_script_path"
