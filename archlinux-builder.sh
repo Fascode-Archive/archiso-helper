@@ -318,7 +318,7 @@ else
     if [[ -n $query ]];  then
         yn=$query
     else
-        printf $ask_delete_working_dir
+        printf "$ask_delete_working_dir"
         read yn
     fi
     function del () {
