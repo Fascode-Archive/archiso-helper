@@ -161,10 +161,16 @@ white_log
 ## 設定読み込み
 if [[ -n $1 && -f $1 ]]; then
     settings_path=$1
+elif [[ -n $1 && ! -f $1 ]]; then
+    red_log $error_settings_path
 fi
-if [[ ! -f $settings_path || -z $settings_path ]]; then
-    settings
-    blue_log "Loaded $current_script_path"
+if [[ -z $settings_path ]]; then
+    if [[ -f $settings_path ]]; then
+        settings
+        blue_log "Loaded $current_script_path"
+    else
+        red_log $error_settings_path
+    fi
 else
     settings
     source $settings_path
