@@ -175,7 +175,7 @@ white_log
 if [[ -n $1 && -f $1 ]]; then
     settings_path=$1
 elif [[ -n $1 && ! -f $1 ]]; then
-    red_log $error_settings_path
+    red_log "The path to the configuration file is incorrect."
 fi
 
 settings
@@ -192,7 +192,7 @@ else
             blue_log "Loaded $settings_path"
         fi
     else
-        red_log $error_settings_path
+        red_log "The path to the configuration file is incorrect."
         exit 1
     fi
 fi
