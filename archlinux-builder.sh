@@ -392,6 +392,7 @@ elif [[  -n $(printf "$archiso_configs" | grep -Eo "http(s?)://(\w|:|%|#|\$|&|\?
     git clone $archiso_configs $working_directory
     if [[ ! $? = 0 ]]; then
         red_log $error_git_clone
+        exit 1
     fi
 else
     red_log $error_confg_not_found
