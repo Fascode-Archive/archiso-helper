@@ -476,7 +476,7 @@ if [[ -n $customrepo_directory  ]]; then
     echo -e "
     [customrepo]\n
     SigLevel = Optional TrustAll\n
-    Server = file://$working_directory/$make_arch\n
+    Server = file://$customrepo_directory/$make_arch\n
     " >> $working_directory/pacman.conf
 fi
 
