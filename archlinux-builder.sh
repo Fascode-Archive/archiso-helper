@@ -397,10 +397,9 @@ if [[ -d $archiso_configs ]]; then
     fi
 elif [[  -n $(printf "$archiso_configs_git" | grep -Eo "http(s?)://(\w|:|%|#|\$|&|\?|\(|\)|~|\.|=|\+|\-|/)+")  ]]; then
     if [[ $(package_check git ; printf $?) = 1 ]]; then
-        #Gitパッケージの判定 いつか自動インストールにしたい
-        red_log $error_git_not_installed
-        exit 1
-    fi
+        yellow_log  $error_git_not_installed
+        install_pacman git
+    else
     blue_log $log_config_clone
     git clone $archiso_configs_git $clone_temp
     if [[ ! $? = 0 ]]; then
