@@ -70,9 +70,14 @@ function settings () {
     ##  i686用ビルドスクリプトへのパス
     i686_build_script=$current_scriput_dir/build_i686.sh
 
+    ## archisoの設定プロファイルのGitのCloneのURL
+    archiso_configs_git=""
+
+    ## Gitの保存先
+    clone_temp="/tmp"
+
     ## archisoの設定プロファイルへのパス
-    #ここにGitのリポジトリを指定することも可能です（ベータ機能）
-    # Gitで指定する場合はリポジトリ直下にプロファイルを作成する必要があります
+    #Gitでクローンする場合は保存先以下のディレクトリを指定する必要があります。
     archiso_configs="/usr/share/archiso/configs/releng"
 
     ## Grubの背景（フルパスで記述してください。デフォルトは空です。）
@@ -384,18 +389,20 @@ if [[ -d $archiso_configs ]]; then
             cp $i686_build_script $working_directory/build.sh
         fi
     fi
-elif [[  -n $(printf "$archiso_configs" | grep -Eo "http(s?)://(\w|:|%|#|\$|&|\?|\(|\)|~|\.|=|\+|\-|/)+")  ]]; then
+elif [[  -n $(printf "$archiso_configs_git" | grep -Eo "http(s?)://(\w|:|%|#|\$|&|\?|\(|\)|~|\.|=|\+|\-|/)+")  ]]; then
     if [[ $(package_check git ; printf $?) = 1 ]];
         #Gitパッケージの判定 いつか自動インストールにしたい
         red_log $error_git_not_installed
         exit 1
     fi
     blue_log $log_config_clone
-    git clone $archiso_configs $working_directory
+    git clone $archiso_configs_git $clone_temp
     if [[ ! $? = 0 ]]; then
         red_log $error_git_clone
         exit 1
     fi
+    cp -r  $archiso_configs $working_directory
+    rm -r $clone_temp
 else
     red_log $error_confg_not_found
     if [[ $archiso_configs = "/usr/share/archiso/configs/releng/" ]]; then
