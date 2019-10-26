@@ -71,6 +71,7 @@ function settings () {
     i686_build_script=$current_scriput_dir/build_i686.sh
 
     ## archisoの設定プロファイルへのパス
+    #ここにGitのリポジトリを指定することも可能です（ベータ機能）
     archiso_configs="/usr/share/archiso/configs/releng"
 
     ## Grubの背景（フルパスで記述してください。デフォルトは空です。）
