@@ -407,7 +407,6 @@ elif [[  -n $(printf "$archiso_configs_git" | grep -Eo "http(s?)://(\w|:|%|#|\$|
         exit 1
     fi
     cp -r  $archiso_configs $working_directory
-    rm -r $clone_temp
 else
     red_log $error_confg_not_found
     if [[ $archiso_configs = "/usr/share/archiso/configs/releng/" ]]; then
@@ -511,6 +510,10 @@ if [[ -d $working_directory ]]; then
     rm -rf $working_directory
 else
     red_log $error_working_dir_not_found
+fi
+
+if [[ -d $clone_temp ]]; then
+    rm -r $clone_temp
 fi
 
 
