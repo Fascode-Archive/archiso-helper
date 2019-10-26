@@ -100,14 +100,6 @@ function settings () {
 }
 
 
-# 変数設定
-year=$(date "+%Y")
-month=$(date "+%m")
-day=$(date "+%d")
-current_scriput_path=$(realpath "$0")
-current_scriput_dir=$(pwd)
-
-
 ## 関数定義
 function red_log () {
     echo -e "\033[0;31m$@\033[0;39m" >&2
@@ -171,6 +163,14 @@ white_log "==================================="
 white_log
 
 
+## 設定前変数
+year=$(date "+%Y")
+month=$(date "+%m")
+day=$(date "+%d")
+current_scriput_path=$(realpath "$0")
+current_scriput_dir=$(pwd)
+
+
 ## 設定読み込み
 if [[ -n $1 && -f $1 ]]; then
     settings_path=$1
@@ -195,6 +195,9 @@ else
         blue_log "Loaded $current_script_path"
     fi
 fi
+
+
+## 設定後変数
 number_of_pkg=${#add_pkg[*]}
 
 
