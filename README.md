@@ -5,13 +5,19 @@ ArchLinuxの最新のライブCDをビルドします
 デフォルトでは/home/直下にarchlinux-hogehoge-x86_64.isoで作成されます。
 
 ```bash
-wget -q https://raw.githubusercontent.com/Hayao0819/archlinux-latest-livecd-builder/master/archlinux-builder.sh
+wget -q https://0e0.pw/Kaop
 chmod 755 archlinux-builder.sh
 sudo ./archlinux-builder.sh
 ```
 
 # 追加のファイルについて
 settings.bashやbuild_i686.shは必須ではありません。
+
+## start_build.bash
+このファイルはビルドする際のランチャーとなるものです。  
+必要なファイルを自動でダウンロード、実行します。  
+スクリプト内部では、設定ファイルへのURLを指定できます。  
+実行するたびにダウンロードを行うので常に最新の状態で利用できます。　　
 
 ## message.bash
 必須のファイルです。単体で実行した場合は自動でダウンロードされます。  
