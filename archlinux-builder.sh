@@ -396,7 +396,7 @@ if [[ -d $archiso_configs ]]; then
         fi
     fi
 elif [[  -n $(printf "$archiso_configs_git" | grep -Eo "http(s?)://(\w|:|%|#|\$|&|\?|\(|\)|~|\.|=|\+|\-|/)+")  ]]; then
-    if [[ $(package_check git ; printf $?) = 1 ]];
+    if [[ $(package_check git ; printf $?) = 1 ]]; then
         #Gitパッケージの判定 いつか自動インストールにしたい
         red_log $error_git_not_installed
         exit 1
