@@ -15,6 +15,7 @@ function settings () {
 
     ## 作業ディレクトリ
     # このディレクトリ内に設定ファイル等を作成するため空のディレクトリを指定することをおすすめします。
+    #~/などを指定するのはその中に大量のファイルを展開されてしまう恐れがあるためおすすめしません。
     working_directory="/home/archlinux-latest-livecd-builder"
 
     ## 生成したいアーキテクチャ
@@ -370,7 +371,7 @@ fi
 
 ## ArchISOプロファイルコピー
 if [[ -d $archiso_configs ]]; then
-blue_log $log_copy_config_dir
+    blue_log $log_copy_config_dir
     cp -r $archiso_configs/* $working_directory
     if [[ $make_arch = "i686" ]]; then
         if [[ ! -f $i686_build_script ]]; then
@@ -380,6 +381,17 @@ blue_log $log_copy_config_dir
             rm $working_directory/build.sh
             cp $i686_build_script $working_directory/build.sh
         fi
+    fi
+elif [[  -n $(printf "$archiso_configs" | grep -Eo "http(s?)://(\w|:|%|#|\$|&|\?|\(|\)|~|\.|=|\+|\-|/)+")  ]]; then
+    if [[ $(package_check git ; printf $?) = 1 ]];
+        #Gitパッケージの判定 いつか自動インストールにしたい
+        red_log $error_git_not_installed
+        exit 1
+    fi
+    blue_log $log_config_clone
+    git clone $archiso_configs $working_directory
+    if [[ ! $? = 0 ]]; then
+        red_log $error_git_clone
     fi
 else
     red_log $error_confg_not_found
