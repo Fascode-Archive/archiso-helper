@@ -3,7 +3,7 @@
 function settings () {
 
     ##言語
-    #現在、enもしくはjaが使用可能です。 
+    #使用可能な言語はmessage.confで定義されている関数になります。
     msg_language="en"
 
     ## 作業ディレクトリ
