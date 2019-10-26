@@ -45,7 +45,8 @@ function settings () {
 
 
     ##ネットワークチェックのURL
-    check_url="https://google.com"
+    #ドメインもしくはIPのみを入力してください。
+    check_url="google.com"
 
     ## archisoのパッケージ名です。
     # AURのパッケージ名にする場合は事前にインストールしておいてください。)
