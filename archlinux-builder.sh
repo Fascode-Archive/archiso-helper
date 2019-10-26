@@ -72,6 +72,7 @@ function settings () {
 
     ## archisoの設定プロファイルへのパス
     #ここにGitのリポジトリを指定することも可能です（ベータ機能）
+    # Gitで指定する場合はリポジトリ直下にプロファイルを作成する必要があります
     archiso_configs="/usr/share/archiso/configs/releng"
 
     ## Grubの背景（フルパスで記述してください。デフォルトは空です。）
@@ -82,15 +83,15 @@ function settings () {
     # ArchISOのオーバーレイディレクトリを編集することをおすすめします。
     overlay_directory=
 
-    ## カスタムリポジトリのディレクトリ
-    # このディレクトリ直下に必ずアーキテクチャ別のディレクトリを作成し、その中に*.pkg.tar.xzを配置してください。
-    # 指定したパッケージをインストールする場合は必ずadd_pkgでパッケージ名を指定してください。
-    customrepo_directory=
-
     ## customize_airootfs.shへのパス（パッケージのインストール後にrootとして実行されるスクリプトです。言語、タイムゾーン、ミラー等の設定を行います。）
     # /usr/share/archiso/configs/releng/airootfs/root/customize_airootfs.shを改造することをおすすめします。非常に重要なファイルであるため、値を変更する際は十分気をつけてください。デフォルトは空です。
     # customize_airootfs.shはovarlay_directoryを上書きします。ここで指定せず、overlay_directoryの/root/customized_airootfs.shを編集することでも変更できます。
     customize_airootfs_path=
+
+    ## カスタムリポジトリのディレクトリ
+    # このディレクトリ直下に必ずアーキテクチャ別のディレクトリを作成し、その中に*.pkg.tar.xzを配置してください。
+    # 指定したパッケージをインストールする場合は必ずadd_pkgでパッケージ名を指定してください。
+    customrepo_directory=
 }
 
 
