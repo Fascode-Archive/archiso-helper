@@ -177,21 +177,24 @@ if [[ -n $1 && -f $1 ]]; then
 elif [[ -n $1 && ! -f $1 ]]; then
     red_log $error_settings_path
 fi
+
+settings
+
 if [[ -z $settings_path ]]; then
+    blue_log "Loaded $current_script_path"
+else
     if [[ -f $settings_path ]]; then
-        settings
-        blue_log "Loaded $current_script_path"
+        source $settings_path
+        check_import=$?
+        if [[ ! $check_import = 0 ]]; then
+            blue_log "Loaded $current_script_path"
+        else
+            blue_log "Loaded $settings_path"
+        fi
     else
         red_log $error_settings_path
+        exit 1
     fi
-else
-    settings
-    source $settings_path
-    check_import=$?
-    if [[ ! $check_import = 0 ]]; then
-        settings
-    fi
-    blue_log "Loaded $settings_path"
 fi
 number_of_pkg=${#add_pkg[*]}
 
