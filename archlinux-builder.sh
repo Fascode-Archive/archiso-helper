@@ -192,8 +192,7 @@ else
             blue_log "Loaded $settings_path"
         fi
     else
-        red_log "The path to the configuration file is incorrect."
-        exit 1
+        blue_log "Loaded $current_script_path"
     fi
 fi
 number_of_pkg=${#add_pkg[*]}
