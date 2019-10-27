@@ -75,7 +75,7 @@ function settings () {
     archiso_configs_git=""
 
     ## Gitの保存先
-    clone_temp="/tmp"
+    clone_temp="/tmp/git_clone"
 
     ## archisoの設定プロファイルへのパス
     #Gitでクローンする場合は保存先以下のディレクトリを指定する必要があります。
@@ -512,7 +512,7 @@ else
     red_log $error_working_dir_not_found
 fi
 
-if [[ -d $clone_temp ]]; then
+if [[ -d $clone_temp && -z $archiso_configs_git ]]; then
     rm -r $clone_temp
 fi
 
