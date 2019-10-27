@@ -399,7 +399,7 @@ elif [[  -n $(printf "$archiso_configs_git" | grep -Eo "http(s?)://(\w|:|%|#|\$|
     if [[ $(package_check git ; printf $?) = 1 ]]; then
         yellow_log  $error_git_not_installed
         install_pacman git
-    else
+    fi
     blue_log $log_config_clone
     git clone $archiso_configs_git $clone_temp
     if [[ ! $? = 0 ]]; then
