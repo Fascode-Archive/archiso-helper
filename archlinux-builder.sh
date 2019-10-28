@@ -226,6 +226,7 @@ elif [[ ! $(type -t $msg_language) = "function" ]]; then
     red_log "The language is not currently available."
     exit 1
 fi
+en
 $msg_language
 
 
