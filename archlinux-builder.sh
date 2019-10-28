@@ -130,7 +130,7 @@ function white_log () {
 
 function package_check () {
     if [[ -z $1 ]]; then
-        red_log "Please specify a package."
+        red_log $error_check_pkg
         exit 1
     fi
     if [[ -n $( pacman -Q | awk '{print $1}' | grep -x "$1" ) ]]; then
