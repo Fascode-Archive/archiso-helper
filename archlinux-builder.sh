@@ -192,6 +192,7 @@ else
         if [[ ! $check_import = 0 ]]; then
             blue_log "Loaded $current_script_path"
         else
+            settings
             blue_log "Loaded $settings_path"
         fi
     else

@@ -92,5 +92,3 @@ function settings () {
     # 指定したパッケージをインストールする場合は必ずadd_pkgでパッケージ名を指定してください。
     customrepo_directory=
 }
-
-settings
