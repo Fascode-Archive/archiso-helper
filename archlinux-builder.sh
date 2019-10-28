@@ -160,6 +160,8 @@ function install_pacman () {
 white_log
 white_log "==================================="
 white_log "ArchLinux Latest LiveCD Builder"
+white_log "Main : shun819.mail@gmail.com"
+white_log "Twitter : @Hayao0819"
 white_log "==================================="
 white_log
 
