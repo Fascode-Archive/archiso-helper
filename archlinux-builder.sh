@@ -268,7 +268,7 @@ fi
 
 ## 作業ディレクトリチェック
 if [[ $current_scriput_dir = $working_directory ]]; then
-    red_log "作業ディレクトリにスクリプトが存在しているディレクトリを指定しないでください。"
+    red_log $error_working_dir_script
     exit 1
 fi
 
