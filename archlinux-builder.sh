@@ -224,6 +224,9 @@ fi
 ## メッセージ取得
 if [[ ! -f $message_file_path ]]; then
     wget -O $message_file_path  https://raw.githubusercontent.com/Hayao0819/archlinux-latest-livecd-builder/master/message.conf
+    msg_dl=0
+else
+    msg_dl=1
 fi
 source $message_file_path
 if [[ -z $(type -t $msg_language) ]]; then
