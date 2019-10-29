@@ -539,6 +539,12 @@ if [[ -d $clone_temp && -z $archiso_configs_git ]]; then
 fi
 
 
+## ダウンロードしたメッセージファイルを削除
+if [[ $msg_dl = 0 ]]; then
+    rm $message_file_path
+fi
+
+
 ## 作成後メッセージ
 if [[ -f $image_file_path ]]; then
     blue_log $log_image_builded
