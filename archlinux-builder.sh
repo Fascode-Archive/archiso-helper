@@ -536,7 +536,7 @@ chmod $perm $image_file_path
 ## MD5
 if [[ $create_md5 = 0 ]]; then
     if [[ ! $(package_check md5; printf $?) = 0 ]]; then
-        red_log "MD5を生成するには、AURから「md5」パッケージをインストールする必要があります。"
+        red_log $error_pkg_md5
     else
         md5 $image_file_path
     fi
