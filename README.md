@@ -1,5 +1,6 @@
-# archlinux-latest-livecd-builder
-ArchLinuxの最新のライブCDをビルドします   
+# archiso-builder
+ArchISOの補助を行います。デフォルト設定で最新のLiveCDをビルドすることもできます。  
+（もともとは最新のCDをビルドするためだったんだが...）
 
 # 実行方法
 デフォルトでは/home/直下にarchlinux-hogehoge-x86_64.isoで作成されます。
