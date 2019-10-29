@@ -501,6 +501,9 @@ cd $working_directory
 ./build.sh -v
 if [[ ! $? = 0 ]]; then
     red_log $error_build
+    if [[ -d $working_directory ]]; then
+        rm -rf $working_directory
+    fi
     exit 1
 fi
 
