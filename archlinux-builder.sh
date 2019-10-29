@@ -102,11 +102,13 @@ function settings () {
 
 
 ## 関数定義
+# 赤（エラー時）
 function red_log () {
     echo -e "\033[0;31m$@\033[0;39m" >&2
     return 0
 }
 
+# 青（通常のログ）
 function blue_log () {
     if [[ ! $log = 1 ]]; then
         echo -e "\033[0;34m$@\033[0;39m"
@@ -114,6 +116,7 @@ function blue_log () {
     return 0
 }
 
+# 黄（注意、デバッグ）
 function yellow_log () {
     if [[ ! $log = 1 ]]; then
         echo -e "\033[0;33m$@\033[0;39m" >&2
@@ -121,6 +124,7 @@ function yellow_log () {
     return 0
 }
 
+# 白、タイトル等
 function white_log () {
     if [[ ! $log = 1 ]]; then
         echo $@
@@ -128,6 +132,7 @@ function white_log () {
     return 0
 }
 
+# パッケージがインストールされているか（終了コード0ならインストールされている、1ならされていない）
 function package_check () {
     if [[ -z $1 ]]; then
         red_log $error_check_pkg
@@ -140,6 +145,7 @@ function package_check () {
     fi
 }
 
+# ユーザーが存在するか（oなら存在している、1ならしていない）
 function user_check () {
     if [[ $(getent passwd $1 > /dev/null ; printf $?) = 0 ]]; then
         printf 0
@@ -150,6 +156,7 @@ function user_check () {
     fi
 }
 
+# パッケージのインストール
 function install_pacman () {
     pacman -Syy --noconfirm
     pacman -S --noconfirm $@
@@ -160,7 +167,7 @@ function install_pacman () {
 white_log
 white_log "==================================="
 white_log "ArchLinux Latest LiveCD Builder"
-white_log "Main : shun819.mail@gmail.com"
+white_log "Mail: shun819.mail@gmail.com"
 white_log "Twitter : @Hayao0819"
 white_log "==================================="
 white_log
@@ -188,8 +195,7 @@ if [[ -z $settings_path ]]; then
 else
     if [[ -f $settings_path ]]; then
         source $settings_path
-        check_import=$?
-        if [[ ! $check_import = 0 ]]; then
+        if [[ ! $? = 0 ]]; then
             blue_log "Loaded $current_script_path"
         else
             settings
@@ -390,16 +396,21 @@ fi
 if [[ -d $archiso_configs ]]; then
     blue_log $log_copy_config_dir
     cp -r $archiso_configs/* $working_directory
+    # i686追加処理
     if [[ $make_arch = "i686" ]]; then
+        # i686用ビルドスクリプト
         if [[ ! -f $i686_build_script ]]; then
             red_log $error_i686_not_found
              wget https://raw.githubusercontent.com/Hayao0819/archlinux-latest-livecd-builder/master/build_i686.sh
         else
+            # スクリプト移動
             rm $working_directory/build.sh
             cp $i686_build_script $working_directory/build.sh
         fi
     fi
+# Git URL判定
 elif [[  -n $(printf "$archiso_configs_git" | grep -Eo "http(s?)://(\w|:|%|#|\$|&|\?|\(|\)|~|\.|=|\+|\-|/)+")  ]]; then
+    # Gitインストール
     if [[ $(package_check git ; printf $?) = 1 ]]; then
         yellow_log  $error_git_not_installed
         install_pacman git
@@ -485,9 +496,13 @@ fi
 
 
 ## ISO作成
-blue_log "Start building ArchLinux LiveCD."
+blue_log $log_start_build
 cd $working_directory
 ./build.sh -v
+if [[ ! $? = 0 ]]; then
+    red_log $error_build
+    exit 1
+fi
 
 
 ## イメージファイル移動
