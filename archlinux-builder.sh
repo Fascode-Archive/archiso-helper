@@ -48,6 +48,10 @@ function settings () {
     message_file_path=$current_scriput_dir/message.conf
 
 
+    ##MD5の作成（0=有効 1=無効 それ以外=無効）
+    create_md5=0
+
+
     ###以下の設定は下手に変更すると重大な影響を及ぼします。必要な場合を除いて変更しないでください。
 
 
@@ -527,6 +531,16 @@ if [[ -z $group ]]; then
 fi
 chown $user:$group  $image_file_path
 chmod $perm $image_file_path
+
+
+## MD5
+if [[ $create_md5 = 0 ]]; then
+    if [[ ! $(package_check md5; printf $?) = 0 ]]; then
+        red_log "MD5を生成するには、AURから「md5」パッケージをインストールする必要があります。"
+    else
+        md5 $image_file_path
+    fi
+fi
 
 
 ## 作業ディレクトリ削除
