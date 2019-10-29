@@ -166,6 +166,17 @@ function install_pacman () {
     pacman -S --noconfirm $@
 }
 
+# エラーによる終了時の処理
+function exit_error () {
+    if [[ -d $working_directory ]]; then
+        rm -rf $working_directory
+    fi
+    if [[ $msg_dl = 0 ]]; then
+        rm $message_file_path
+    fi
+    exit 1
+}
+
 
 ## タイトル
 white_log
@@ -235,10 +246,10 @@ fi
 source $message_file_path
 if [[ -z $(type -t $msg_language) ]]; then
     red_log "The language is not currently available."
-    exit 1
+    exit_error
 elif [[ ! $(type -t $msg_language) = "function" ]]; then
     red_log "The language is not currently available."
-    exit 1
+    exit_error
 fi
 en
 $msg_language
@@ -247,7 +258,7 @@ $msg_language
 ## Rootチェック
 if [[ ! $UID = 0 ]]; then
     red_log $error_root
-    exit 1
+    exit_error
 fi
 
 
@@ -256,7 +267,7 @@ if [[ -f /etc/os-release ]]; then
     source /etc/os-release
     if [[ ! $ID = "arch" ]]; then
         red_log $error_archlinux
-        #exit 1
+        exit_error
     fi
 else
     if [[ -n $(find /usr/bin/ -name "pacman" 2> /dev/null) ]]; then
@@ -264,11 +275,11 @@ else
         source  /etc/lsb-release
         if [[ ! $DISTRIB_ID = "Arch" ]]; then
             red_log $error_archlinux
-            #exit 1
+            exit_error
         fi
     else
         red_log $error_pacman
-        #exit 1
+        exit_error
     fi
 fi
 
@@ -276,14 +287,14 @@ fi
 ## 作業ディレクトリチェック
 if [[ $current_scriput_dir = $working_directory ]]; then
     red_log $error_working_dir_script
-    exit 1
+    exit_error
 fi
 
 
 ## 出力先チェック
 if [[ -f $image_file_path ]]; then
     red_log $error_filename
-    exit 1
+    exit_error
 fi
 
 
@@ -292,14 +303,14 @@ case $make_arch in
     i686 ) : ;;
     x86_64 ) : ;;
     * ) red_log $error_architecture
-        exit 1 ;;
+        exit_error ;;
 esac
 
 
 ## ユーザーチェック
 if [[ ! $(user_check $user ) = 0 ]]; then
     red_log $error_user
-    exit 1
+    exit_error
 fi
 
 ## デバッグ変数の表示
@@ -346,7 +357,7 @@ if [[ $(package_check $archiso_package_name ; printf $?) = 1 ]]; then
         install_pacman archiso
     else
         red_log $error_custom_archiso
-        exit 1
+        exit_error
     fi
 elif [[ $local_archiso_version < $remote_archiso_version ]]; then
     yellow_log $log_archiso_iinstalled
@@ -358,7 +369,7 @@ elif [[ $local_archiso_version < $remote_archiso_version ]]; then
         install_pacman archiso
     else
         red_log $error_custom_archiso
-        exit 1
+        exit_error
     fi
 elif [[ $local_archiso_version > $remote_archiso_version ]]; then
     yellow_log $log_archiso_newer
@@ -387,7 +398,7 @@ else
         Y ) del ;;
         Yes ) del ;;
         yes ) del ;;
-        * ) exit 1
+        * ) exit_error
     esac
     mkdir -p $working_directory
     chmod 755 $working_directory
@@ -426,7 +437,7 @@ elif [[  -n $(printf "$archiso_configs_git" | grep -Eo "http(s?)://(\w|:|%|#|\$|
     git clone $archiso_configs_git $clone_temp
     if [[ ! $? = 0 ]]; then
         red_log $error_git_clone
-        exit 1
+        exit_error
     fi
     cp -r  $archiso_configs $working_directory
 else
@@ -436,7 +447,7 @@ else
     else
         red_log $error_confg_not_found
     fi
-    exit 1
+    exit_error
 fi
 
 
@@ -451,7 +462,7 @@ done
 if [[ -n $grub_background ]]; then
     if [[ ! -f $grub_background ]]; then
         red_log $error_grub_background
-        exit 1
+        exit_error
     fi
     cp $grub_background $working_directory/syslinux/splash.png
 fi
@@ -461,7 +472,7 @@ fi
 if [[ -n $overlay_directory ]]; then
     if [[ ! -d $overlay_directory ]]; then
         red_log $error_overlay_dir
-        exit 0
+        exit_error
     fi
     blue_log $log_copy_overlay_dir
     cp -ri $overlay_directory $working_directory/airootfs
@@ -472,7 +483,7 @@ fi
 if [[ -n $customize_airootfs_path ]]; then
     if [[ ! -f $customize_airootfs_path ]]; then
         red_log $error_customize_airootfs
-        exit 1
+        exit_error
     fi
     cp -i $customize_airootfs_path $working_directory/airootfs/root/customize_airootfs.sh
 fi
@@ -482,12 +493,12 @@ fi
 if [[ -n $customrepo_directory  ]]; then
     if [[ ! -d $customrepo_directory ]]; then
         red_log $error_customrepo_dir
-        exit 1
+        exit_error
     fi
     if [[ ! -d $customrepo_directory/$make_arch ]]; then
         red_log $error_customrepo_architecture_dir
         red_log $error_customrepo_setting_guide
-        exit 1
+        exit_error
     fi
     cd $customrepo_directory/$make_arch
     blue_log $log_generate_package_list
@@ -508,10 +519,7 @@ cd $working_directory
 ./build.sh -v
 if [[ ! $? = 0 ]]; then
     red_log $error_build
-    if [[ -d $working_directory ]]; then
-        rm -rf $working_directory
-    fi
-    exit 1
+    exit_error
 fi
 
 
@@ -519,7 +527,7 @@ fi
 if [[ -z $( ls $working_directory/out ) ]]; then
     red_log $error_image_not_found
     red_log $error_run_again
-    exit 1
+    exit_error
 fi
 mv $working_directory/out/* $image_file_path
 
@@ -567,5 +575,5 @@ if [[ -f $image_file_path ]]; then
     blue_log $log_image_builded
 else
     red_log $error_move_image
-    exit 1
+    exit_error
 fi
