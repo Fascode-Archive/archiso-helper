@@ -2,6 +2,13 @@
 
 set -e -u
 
+parent="$(ps -o comm= $PPID)"
+case $parent in
+    * ) echo "Do not run alone."
+         exit 1;;
+    *.sh) : ;;
+esac
+exit 
 iso_name=archlinux
 iso_label="ARCH_$(date +%Y%m)"
 iso_version=$(date +%Y.%m.%d)
