@@ -48,8 +48,12 @@ function settings () {
     message_file_path=$current_scriput_dir/message.conf
 
 
-    ##MD5の作成（0=有効 1=無効 それ以外=無効）
+    ## MD5の作成（0=有効 1=無効 それ以外=無効）
     create_md5=0
+
+
+    # MD5生成のコマンド（ファイル名の代わりに「$image_file_path」が使用できます）
+    cmd_md5='md5 $image_file_path > "$(basename $image_file_path).md5"'
 
 
     ###以下の設定は下手に変更すると重大な影響を及ぼします。必要な場合を除いて変更しないでください。
@@ -235,25 +239,84 @@ else
     blue_log "The network connection was confirmed."
 fi
 
+## ベースメッセージ定義
+en () {
+    error_check_pkg="package_check : Please specify a package."
+    error_root="You need root permission."
+    error_archlinux="The script is able to run in ArchLinux only."
+    error_pacman="Failed to execute because pacman was not found"
+    error_working_dir_script="Do not specify the directory where the script exists in the working directory."
+    error_filename="A file with the same name exists."
+    error_architecture="The architecture setting is incorrect."
+    error_user="${user} is not exits."
+    debug_archiso_package_name="The ArchISO package name is set to ${archiso_package_name}."
+    debug_log="Log is disabled."
+    debug_archiso_conf="The path to the configuration profile has been changed to ${archiso_configs}."
+    debug_grub_background="Grub background is set to ${grub_background}."
+    debug_overlay_dir="The G overlay directory is set to ${overlay_directory}."
+    debug_customrepo="The custom repository is set to ${customrepo_directory}."
+    debug_airootfs="The path of customize_airootfs.sh is set to ${customize_airootfs_path}."
+    debug_remote_archiso_ver="The remote archiso version is fixed at ${remote_archiso_version}."
+    debug_local_archiso_ver="The local archiso version is fixed at ${local_archiso_version}."
+    log_archiso_not_installed="ArchISO is not installed."
+    log_install_archiso="Install ArchISO."
+    error_custom_archiso="Install ${archiso_package_name} manually."
+    log_archiso_iinstalled="ArchISO is installed."
+    log_archiso_older="But ArchISO is not latest."
+    log_archiso_upgrade="Update ArchISO."
+    log_remote_archiso_ver="Installed  version: ${local_archiso_version}"
+    log_local_archiso_ver="Repository version: ${remote_archiso_version}"
+    log_archiso_newer="Installed ArchISO is newer than official repository."
+    ask_delete_working_dir="Working directory already exists. Do you want to initialize it? :"
+    log_delete_working_dir="Deleting working directory."
+    log_copy_config_dir="Copying settings to working directory."
+    error_i686_not_found="i686's build.sh is not exist."
+    error_git_not_installed="Git is not installed."
+    log_config_clone="Clone the configuration file from Git."
+    error_git_glone="Git Clone failed. The address may be wrong."
+    error_confg_not_found="There is not ArchISO profiles."
+    error_install_archiso="Please Install ArchISO manually."
+    log_add_packages="Add custom packages to list."
+    error_grub_background="The path to the Grub background is incorrect."
+    error_overlay_dir="The overlay directory setting is invalid."
+    log_copy_overlay_dir="Copying overlay directory ..."
+    error_customize_airootfs="The path to customize_airootfs.sh is invalid."
+    error_customrepo_dir="The custom repository directory does not exist."
+    error_customrepo_architecture_dir="There are no custom repository directories by architecture."
+    error_customrepo_setting_guide="Create a directory for each architecture directly under ${customrepo_directory} and put pkg.tar.xz in it."
+    log_generate_package_list="generating custom repo list..."
+    log_register_customrepo="adding custom packages..."
+    log_start_build="Start building ArchLinux LiveCD."
+    error_build="The build was interrupted due to some error."
+    error_image_not_found="The image file that should have exist does not exist."
+    error_run_again="Please run the script again."
+    log_change_perm="CHanging permission of image file."
+    error_pkg_md5='To generate MD5, you need to install "md5" package from AUR.'
+    error_working_dir_not_found="${working_directory} is not found."
+    log_image_builded="Created ArchLinux Live CD in ${image_file_path}."
+    error_move_image="The image file could not be moved. The file may be in ${working_directory}/out/ ."
+}
+
 
 ## メッセージ取得
-if [[ ! -f $message_file_path ]]; then
-    wget -O $message_file_path  https://raw.githubusercontent.com/Hayao0819/archlinux-latest-livecd-builder/master/message.conf
-    msg_dl=0
-else
-    msg_dl=1
+if [[ ! $msg_language = "en" ]]; then
+    if [[ ! -f $message_file_path ]]; then
+        wget -O $message_file_path  https://raw.githubusercontent.com/Hayao0819/archlinux-latest-livecd-builder/master/message.conf
+        msg_dl=0
+    else
+        msg_dl=1
+    fi
+    source $message_file_path
+    if [[ -z $(type -t $msg_language) ]]; then
+        red_log "The language is not currently available."
+        exit_error
+    elif [[ ! $(type -t $msg_language) = "function" ]]; then
+        red_log "The language is not currently available."
+        exit_error
+    fi
+    eval en
+    eval $msg_language
 fi
-source $message_file_path
-if [[ -z $(type -t $msg_language) ]]; then
-    red_log "The language is not currently available."
-    exit_error
-elif [[ ! $(type -t $msg_language) = "function" ]]; then
-    red_log "The language is not currently available."
-    exit_error
-fi
-en
-$msg_language
-
 
 ## Rootチェック
 if [[ ! $UID = 0 ]]; then
@@ -546,7 +609,7 @@ if [[ $create_md5 = 0 ]]; then
     if [[ ! $(package_check md5; printf $?) = 0 ]]; then
         red_log $error_pkg_md5
     else
-        md5 $image_file_path > "$(basename $image_file_path).md5"
+        eval $cmd_md5
     fi
 fi
 
