@@ -239,6 +239,7 @@ else
     blue_log "The network connection was confirmed."
 fi
 
+
 ## ベースメッセージ定義
 en () {
     error_check_pkg="package_check : Please specify a package."
@@ -316,7 +317,10 @@ if [[ ! $msg_language = "en" ]]; then
     fi
     eval en
     eval $msg_language
+else
+    eval en
 fi
+
 
 ## Rootチェック
 if [[ ! $UID = 0 ]]; then
