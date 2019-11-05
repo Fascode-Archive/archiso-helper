@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
 ## 設定ファイルのパス（もしくはURL）
-settings_url=https://raw.githubusercontent.com/Hayao0819/archlinux-latest-livecd-builder/master/settings.bash
+settings_path=https://raw.githubusercontent.com/Hayao0819/archlinux-latest-livecd-builder/master/settings.bash
 
 
 ## 古いファイルの削除
@@ -18,10 +18,14 @@ fi
 ## 新しいファイルのダウンロード
 wget -O /tmp/archlinux-builder.sh https://0e0.pw/Kviw
 
-if [[ -n $(printf "$settings_url" | grep -Eo "http(s?)://(\w|:|%|#|\$|&|\?|\(|\)|~|\.|=|\+|\-|/)+") ]]; then
-    wget -O /tmp/settings.bash $settings_url
+if [[ -n $(printf "$settings_path" | grep -Eo "http(s?)://(\w|:|%|#|\$|&|\?|\(|\)|~|\.|=|\+|\-|/)+") ]]; then
+    wget -O /tmp/settings.bash $settings_path
 else
-    cp $settings_url /tmp/settings.bash
+    if [[ -f $settings_path ]]; then
+        cp $settings_path /tmp/settings.bash
+    else
+        echo "設定ファイルが存在しません" >&2
+    fi
 fi
 
 
