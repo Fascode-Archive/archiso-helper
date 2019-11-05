@@ -31,4 +31,4 @@ fi
 
 ## 権限付与と実行
 chmod 775 /tmp/archlinux-builder.sh
-sudo tmp//archlinux-builder.sh /tmp/settings.bash
+sudo /tmp/archlinux-builder.sh /tmp/settings.bash
