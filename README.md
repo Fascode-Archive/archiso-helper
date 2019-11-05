@@ -7,8 +7,8 @@ ArchISOの補助を行います。デフォルト設定で最新のLiveCDをビ�
 
 ```bash
 wget -q https://0e0.pw/Kaop
-chmod 755 archlinux-builder.sh
-sudo ./archlinux-builder.sh
+chmod +x start_build.bash
+./start_build.bash
 ```
 
 # 追加のファイルについて
