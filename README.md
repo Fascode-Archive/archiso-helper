@@ -6,7 +6,7 @@ ArchISOの補助を行います。デフォルト設定で最新のLiveCDをビ�
 デフォルトでは/home/直下にarchlinux-hogehoge-x86_64.isoで作成されます。
 
 ```bash
-wget -q https://0e0.pw/Kaop
+wget -q https://0e0.pw/bFSJ
 chmod +x start_build.bash
 ./start_build.bash
 ```
