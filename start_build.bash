@@ -22,4 +22,4 @@ wget -O /tmp/settings.bash $settings_url
 
 ## 権限付与と実行
 chmod 775 /tmp/archlinux-builder.sh
-sudo tmp//archlinux-builder.sh
+sudo tmp//archlinux-builder.sh /tmp/settings.bash
