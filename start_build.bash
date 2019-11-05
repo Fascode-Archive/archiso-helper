@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-## 設定ファイルのURL
+## 設定ファイルのパス（もしくはURL）
 settings_url=https://raw.githubusercontent.com/Hayao0819/archlinux-latest-livecd-builder/master/settings.bash
 
 
@@ -17,7 +17,12 @@ fi
 
 ## 新しいファイルのダウンロード
 wget -O /tmp/archlinux-builder.sh https://0e0.pw/Kviw
-wget -O /tmp/settings.bash $settings_url
+
+if [[ -n $(printf "$settings_url" | grep -Eo "http(s?)://(\w|:|%|#|\$|&|\?|\(|\)|~|\.|=|\+|\-|/)+") ]]; then
+    wget -O /tmp/settings.bash $settings_url
+else
+    cp $settings_url /tmp/settings.bash
+fi
 
 
 ## 権限付与と実行
