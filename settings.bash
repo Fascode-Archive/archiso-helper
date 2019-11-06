@@ -47,7 +47,7 @@ function settings () {
 
     ## MD5生成のコマンド（ファイル名の代わりに「$image_file_path」が使用できます）
     # リダイレクトは記述しないでください。
-    cmd_md5='md5 $image_file_path'
+    cmd_md5="md5 $image_file_path"
 
 
     ###以下の設定は下手に変更すると重大な影響を及ぼします。必要な場合を除いて変更しないでください。
