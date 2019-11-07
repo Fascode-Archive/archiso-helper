@@ -51,12 +51,6 @@ function settings () {
     ## MD5の作成（0=有効 1=無効 それ以外=無効）
     create_md5=0
 
-
-    ## MD5生成のコマンド（ファイル名の代わりに「$image_file_path」が使用できます）
-    # リダイレクトは記述しないでください。
-    cmd_md5="md5 $image_file_path"
-
-
     ###以下の設定は下手に変更すると重大な影響を及ぼします。必要な場合を除いて変更しないでください。
 
 
@@ -614,7 +608,7 @@ if [[ $create_md5 = 0 ]]; then
     if [[ ! $(package_check md5; printf $?) = 0 ]]; then
         red_log $error_pkg_md5
     else
-        eval $cmd_md5  > "$(basename $image_file_path).md5"
+        md5 $image_file_path  > "$(basename $image_file_path).md5"
     fi
 fi
 
