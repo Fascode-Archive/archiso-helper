@@ -205,18 +205,18 @@ fi
 settings
 
 if [[ -z $settings_path ]]; then
-    blue_log "Loaded $current_script_path"
+    blue_log "Loaded settings $current_script_path"
 else
     if [[ -f $settings_path ]]; then
         source $settings_path
         if [[ ! $? = 0 ]]; then
-            blue_log "Loaded $current_script_path"
+            blue_log "Loaded settings $current_script_path"
         else
             settings
-            blue_log "Loaded $settings_path"
+            blue_log "Loaded settings $settings_path"
         fi
     else
-        blue_log "Loaded $current_script_path"
+        blue_log "Loaded settings $current_script_path"
     fi
 fi
 
@@ -309,11 +309,14 @@ if [[ ! $msg_language = "en" ]]; then
     elif [[ ! $(type -t $msg_language) = "function" ]]; then
         red_log "The language is not currently available."
         exit_error
+    else
+        blue_log "Loaded message $message_file_path"
     fi
     eval en
     eval $msg_language
 else
     eval en
+    blue_log "Loaded message $current_script_path"
 fi
 
 
