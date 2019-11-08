@@ -3,7 +3,7 @@
 add_pkg_aur=($@)
 working_directory=/tmp/build_aur
 number_of_pkg_aur=${#add_pkg_aur[*]}
-current_dir=$(pwd)
+export_directory=$(pwd)
 if [[ $UID = 0 ]]; then
     echo "Rootで実行しないでください。"
     exit 1
@@ -23,8 +23,8 @@ for (( i=0; i<number_of_pkg_aur ; i++ )); do
     git clone https://aur.archlinux.org/${add_pkg_aur[$i]}.git $working_directory/${add_pkg_aur[$i]}
     cd $working_directory/${add_pkg_aur[$i]}
     makepkg -s
-    mv *.pkg.tar.xz $current_dir
+    mv *.pkg.tar.xz $export_directory
     cd -
     rm -rf $working_directory/${add_pkg_aur[$i]}
 done 
-rm -r $w
+rm -r $working_directory
