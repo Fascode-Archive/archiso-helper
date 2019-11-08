@@ -568,6 +568,12 @@ if [[ -n $customrepo_directory  ]]; then
     fi
     cd $customrepo_directory/$make_arch
     blue_log $log_generate_package_list
+    if [[ -f $customrepo_directory/$make_arch/customrepo.db.tar.gz ]]; then
+        rm customrepo.db
+        rm customrepo.db.tar.gz
+        rm customrepo.files
+        rm customrepo.files.tar.gz
+    fi
     repo-add customrepo.db.tar.gz *.pkg.tar.xz
     cd $current_scriput_dir
     blue_log $log_register_customrepo
