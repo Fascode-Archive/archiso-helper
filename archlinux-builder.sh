@@ -28,7 +28,7 @@ function settings () {
     # ここの値が不正な場合、失敗するか作業ディレクトリ/outに作成されます。
     image_file_path="/home/archlinux-${year}.${month}.${day}-${make_arch}.iso"
 
-    ## 追加するパッケージ
+    ## 追加する公式リポジトリのパッケージ
     add_pkg=(linux networkmanager)
 
     ## 所有ユーザー名
@@ -377,6 +377,7 @@ if [[ ! $(user_check $user ) = 0 ]]; then
     red_log $error_user
     exit_error
 fi
+
 
 ## デバッグ変数の表示
 if [[ ! $archiso_package_name = "archiso" ]]; then
