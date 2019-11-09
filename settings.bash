@@ -9,7 +9,7 @@ function settings () {
     ## 作業ディレクトリ
     # このディレクトリ内に設定ファイル等を作成するため空のディレクトリを指定することをおすすめします。
     #~/などを指定するのはその中に大量のファイルを展開されてしまう恐れがあるためおすすめしません。
-    working_directory="/home/archlinux-latest-livecd-builder"
+    working_directory="/tmp/archiso"
 
     ## 生成したいアーキテクチャ
     # i686 or x86_64）を入力してください（i686は非公式リポジトリを使用します。
@@ -21,7 +21,7 @@ function settings () {
     # ここの値が不正な場合、失敗するか作業ディレクトリ/outに作成されます。
     image_file_path="/home/archlinux-${year}.${month}.${day}-${make_arch}.iso"
 
-    ## 追加するパッケージ
+    ## 追加する公式リポジトリのパッケージ
     add_pkg=(linux networkmanager)
 
     ## 所有ユーザー名
@@ -71,7 +71,7 @@ function settings () {
     archiso_configs_git=""
 
     ## Gitの保存先
-    clone_temp="/tmp/git_clone"
+    clone_temp="/tmp/archiso/git"
 
     ## archisoの設定プロファイルへのパス
     #Gitでクローンする場合は保存先以下のディレクトリを指定する必要があります。
