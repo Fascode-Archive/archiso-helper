@@ -45,15 +45,9 @@ AURにあるパッケージをビルドして、*.pkg.tar.xzにします。ビ�
 
 
 # i686
-~~
-32bit版を生成する場合は追加で以下のコマンドが必要です。  
-（i686用のビルドスクリプトが必要なため）
 
-```bash
-wget -q https://raw.githubusercontent.com/Hayao0819/archlinux-latest-livecd-builder/master/build_i686.sh
-```
-~~
-必要なくなりました。設定ファイルでi686を指定すると自動でダウンロードされます。
+以前はコマンドを追加で実行する必要がありましたが、自動化され必要なくなりました。  
+設定ファイルでi686を指定すると自動でbuild_i686.shがダウンロードされます。
 
 
 # 設定
