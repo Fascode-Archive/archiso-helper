@@ -1,7 +1,10 @@
 #!/usr/bin/env bash
 
-## 設定ファイルのパス（もしくはURL）
-settings_path=https://raw.githubusercontent.com/Hayao0819/archlinux-latest-livecd-builder/master/settings.bash
+if [[ -z $@ ]]; then
+    settings_path=https://raw.githubusercontent.com/Hayao0819/archlinux-latest-livecd-builder/master/settings.bash
+else
+    settings_path=$@
+fi
 
 
 ## 古いファイルの削除
