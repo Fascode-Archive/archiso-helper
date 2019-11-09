@@ -1,9 +1,15 @@
 #!/usr/bin/env bash
 
 if [[ -z $@ ]]; then
+    # 設定ファイルのパスを恒久的に変更する場合はこちらの値を使用してください。
+    # URLかファイルパス、どちらでも問題ありません。
     settings_path=https://raw.githubusercontent.com/Hayao0819/archlinux-latest-livecd-builder/master/settings.bash
 else
-    settings_path=$@
+    case $@ in
+        "lts" ) settings_path=https://raw.githubusercontent.com/Hayao0819/archlinux-lts-live/master/settings.bash;;
+        "default" ) settings_path=https://raw.githubusercontent.com/Hayao0819/archlinux-latest-livecd-builder/master/settings.bash;;
+        *) settings_path=$@;;
+    esac
 fi
 
 
