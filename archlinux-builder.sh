@@ -577,11 +577,7 @@ if [[ -n $customrepo_directory  ]]; then
     repo-add customrepo.db.tar.gz *.pkg.tar.xz
     cd $current_scriput_dir
     blue_log $log_register_customrepo
-    echo -e "
-    [customrepo]\n
-    SigLevel = Optional TrustAll\n
-    Server = file://$customrepo_directory/$make_arch\n
-    " >> $working_directory/pacman.conf
+    echo -e "[customrepo]\nSigLevel = Optional TrustAll\nServer = file://$customrepo_directory/$make_arch" >> $working_directory/pacman.conf
 
     ## customize_airootfs.shにて、カスタムリポジトリの設定を削除
     line_number=$(wc -l /etc/pacman.conf | awk '{print $1}')
