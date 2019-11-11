@@ -582,6 +582,14 @@ if [[ -n $customrepo_directory  ]]; then
     SigLevel = Optional TrustAll\n
     Server = file://$customrepo_directory/$make_arch\n
     " >> $working_directory/pacman.conf
+
+    ## customize_airootfs.shにて、カスタムリポジトリの設定を削除
+    line_number=$(wc -l /etc/pacman.conf | awk '{print $1}')
+    dqt='"'
+    echo "sed -i $dqt$(( line_number - 2)),${line_number}d$dqt /etc/pacman.conf" >> $working_directory/airootfs/root/customize_airootfs.sh
+    unset line_number
+    unset dqt
+
 fi
 
 
