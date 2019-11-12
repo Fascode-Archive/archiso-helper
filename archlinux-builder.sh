@@ -212,7 +212,7 @@ function install_aur () {
     # 生成されたパッケージを検索してインストール
     pacman -Syy
     pacman -U $(find $(dirname $build_aur_script_path) -name "$1*.pkg.tar.xz")
-    $(find $(dirname $build_aur_script_path) -name "$1*.pkg.tar.xz")
+    rm $(find $(dirname $build_aur_script_path) -name "$1*.pkg.tar.xz")
 }
 
 
