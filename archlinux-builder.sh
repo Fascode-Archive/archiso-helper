@@ -196,6 +196,9 @@ function install_aur () {
         ask_user () {
             echo -n  "一般ユーザー名を入力してください。 : "
             read aur_user
+            if [[ -z $aur_user ]]; then
+                ask_user
+            fi
         }
         ask_user
         while [ $(user_check $aur_user) = 1 ]; do
