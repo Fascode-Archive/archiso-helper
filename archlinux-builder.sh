@@ -141,9 +141,13 @@ function package_check () {
         red_log $error_check_pkg
         exit 1
     fi
-    if [[ -n $( pacman -Q | awk '{print $1}' | grep -x "$1" ) ]]; then
+    if [[ -n $( pacman -Q $1) ]]; then
+        echo "$1 is installed."
+        true
         return 0
     else
+        echo "$1 is not installed."
+        false
         return 1
     fi
 }
@@ -427,12 +431,12 @@ else
 fi
 
 if [[ -z $local_archiso_version ]]; then
-    local_archiso_version=$(pacman -Q | grep "$archiso_package_name" | awk '{print $2}')
+    local_archiso_version=$(pacman -Q "$archiso_package_name" | awk '{print $2}')
 else
     yellow_log  $debug_local_archiso_ver
 fi
 
-if [[ $(package_check $archiso_package_name ; printf $?) = 1 ]]; then
+if [[ $(package_check $archiso_package_name) ]]; then
     yellow_log $log_archiso_not_installed
     yellow_log $log_install_archiso
     if [[ $archiso_package_name = "archiso" ]]; then
@@ -513,7 +517,7 @@ if [[ -d $archiso_configs ]]; then
 # Git URL判定
 elif [[  -n $(printf "$archiso_configs_git" | grep -Eo "http(s?)://(\w|:|%|#|\$|&|\?|\(|\)|~|\.|=|\+|\-|/)+")  ]]; then
     # Gitインストール
-    if [[ $(package_check git ; printf $?) = 1 ]]; then
+    if [[ $(package_check git) ]]; then
         yellow_log  $error_git_not_installed
         install_pacman git
     fi
@@ -637,7 +641,7 @@ chmod $perm $image_file_path
 
 ## MD5
 if [[ $create_md5 = 0 ]]; then
-    if [[ ! $(package_check md5; printf $?) = 0 ]]; then
+    if [[ ! $(package_check md5) ]]; then
         red_log $error_pkg_md5
     else
         md5 $image_file_path  > "$(basename $image_file_path).md5"
