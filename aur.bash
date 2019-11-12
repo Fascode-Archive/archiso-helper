@@ -15,7 +15,7 @@ fi
 
 
 # 引数チェック
-if [[ -n $@ ]]; then
+if [[ -z $@ ]]; then
     echo "何も指定されていません。"
     exit 1
 fi
