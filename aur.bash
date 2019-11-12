@@ -43,7 +43,7 @@ for (( i=0; i<number_of_pkg_aur ; i++ )); do
     makepkg -s
     # 移動
     mv *.pkg.tar.xz $export_directory
-    cd -
+    cd - >> /dev/null
     # 削除
     rm -rf $working_directory/${add_pkg_aur[$i]}
 done 
