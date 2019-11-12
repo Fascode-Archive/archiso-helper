@@ -207,7 +207,7 @@ function install_aur () {
     fi
     # パッケージをaur.bashでビルド
     chmod 755 $build_aur_script_path
-    su $aur_user -c "$build_aur_script_path $1"
+    su $aur_user -c "$build_aur_script_path $1 $(dirname $build_aur_script_path)"
 
     # 生成されたパッケージを検索してインストール
     pacman -Syy
