@@ -141,12 +141,10 @@ function package_check () {
         red_log $error_check_pkg
         exit 1
     fi
-    if [[ -n $( pacman -Q $1) ]]; then
-        echo "$1 is installed."
+    if [[ -n $( pacman -Q $1 | awk '{print $1}' ) ]]; then
         true
         return 0
     else
-        echo "$1 is not installed."
         false
         return 1
     fi
