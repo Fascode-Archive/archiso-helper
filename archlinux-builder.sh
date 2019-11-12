@@ -242,7 +242,7 @@ en () {
     error_archlinux="The script is able to run in ArchLinux only."
     error_pacman="Failed to execute because pacman was not found"
     error_working_dir_script="Do not specify the directory where the script exists in the working directory."
-    error_filename="A file with the same name exists."
+    error_filename="A file with the same name already exists. Are you sure you want to overwrite it? (y/N) : "
     error_architecture="The architecture setting is incorrect."
     error_user="${user} is not exits."
     debug_archiso_package_name="The ArchISO package name is set to ${archiso_package_name}."
@@ -263,7 +263,7 @@ en () {
     log_remote_archiso_ver="Installed  version: ${local_archiso_version}"
     log_local_archiso_ver="Repository version: ${remote_archiso_version}"
     log_archiso_newer="Installed ArchISO is newer than official repository."
-    ask_delete_working_dir="Working directory already exists. Do you want to initialize it? (y/N) :"
+    ask_delete_working_dir="Working directory already exists. Do you want to initialize it? (y/N) : "
     log_delete_working_dir="Deleting working directory."
     log_copy_config_dir="Copying settings to working directory."
     error_i686_not_found="i686's build.sh is not exist."
@@ -358,8 +358,24 @@ fi
 
 ## 出力先チェック
 if [[ -f $image_file_path ]]; then
-    red_log $error_filename
-    exit_error
+    if [[ -n $query ]];  then
+        yn=$query
+    else
+        printf "$error_filename"
+        read yn
+    fi
+    function del () {
+        rm $image_file_path
+    }
+    case $yn in
+        y ) del ;;
+        Y ) del ;;
+        Yes ) del ;;
+        yes ) del ;;
+        * ) exit_error
+    esac
+    unset yn
+    unset del
 fi
 
 
@@ -468,6 +484,8 @@ else
     esac
     mkdir -p $working_directory
     chmod 755 $working_directory
+    unset del
+    unset yn
 fi
 
 if [[ ! -d $working_directory/out/ ]]; then
