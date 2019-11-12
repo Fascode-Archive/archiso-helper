@@ -613,7 +613,7 @@ fi
 blue_log $log_start_build
 cd $working_directory
 $working_directory/build.sh -v
-cd -
+cd - > /dev/null
 if [[ ! $? = 0 ]]; then
     red_log $error_build
     exit_error
