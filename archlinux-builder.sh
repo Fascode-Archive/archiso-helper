@@ -613,8 +613,7 @@ fi
 
 ## ISO作成
 blue_log $log_start_build
-cd $working_directory
-./build.sh -v
+$working_directory/build.sh -v
 if [[ ! $? = 0 ]]; then
     red_log $error_build
     exit_error
