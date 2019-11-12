@@ -38,6 +38,10 @@ function settings () {
     ## 所有グループ名（作成後のISOイメージファイルの所有グループ 空でwheelに設定）
     group=
 
+    ## AURからのパッケージインストールに使う一般ユーザー
+    # 設定されていない場合はAURインストール時に聞かれます。
+    aur_user=
+
     ## 作成後のファイル権限
     perm=664
 
@@ -174,6 +178,38 @@ function exit_error () {
         rm $message_file_path
     fi
     exit 1
+}
+
+# 簡易AURヘルパー
+# 現在複数パッケージの指定はできません
+function install_aur () {
+    if [[ -n $2 ]]; then
+        echo "現在複数のパッケージを同時に指定することはできません。"
+    fi
+    # aur.bashをダウンロード
+    if [[ -f $build_aur_script_path ]]; then
+        rm $build_aur_script_path
+    fi
+    wget -O $build_aur_script_path https://raw.githubusercontent.com/Hayao0819/archiso-helper/master/aur.bash
+    # 一般ユーザーを設定
+    if [[ -z $aur_user ]]; then
+        ask_user () {
+            echo -n  "一般ユーザー名を入力してください。 : "
+            read aur_user
+        }
+        ask_user
+        while [ $(user_check $aur_user) = 1 ]; do
+            ask_user
+        done
+    fi
+    # パッケージをaur.bashでビルド
+    chmod 755 $build_aur_script_path
+    su $aur_user -c "$build_aur_script_path $1"
+
+    # 生成されたパッケージを検索してインストール
+    pacman -Syy
+    pacman -U $(find $(dirname $build_aur_script_path) -name "$1*.pkg.tar.xz")
+    $(find $(dirname $build_aur_script_path) -name "$1*.pkg.tar.xz")
 }
 
 
@@ -641,18 +677,7 @@ chmod $perm $image_file_path
 if [[ $create_md5 = 0 ]]; then
     if [[ $(package_check md5; printf $?) = 0 ]]; then
         yellow_log $error_pkg_md5
-        wget -O $build_aur_script_path https://raw.githubusercontent.com/Hayao0819/archiso-helper/master/aur.bash
-        ask_user () {
-            echo -n  "一般ユーザー名を入力してください。 : "
-            read aur_user
-        }
-        ask_user
-        while [ $(user_check $aur_user) = 1 ]; do
-            ask_user
-        done
-        su $aur_user -c "$build_aur_script_path md5"
-        pacman -Syy
-        pacman -U $(find $(dirname $build_aur_script_path) -name "md5*.pkg.tar.xz")
+        install_aur md5
     fi
     md5 $image_file_path  > "$(basename $image_file_path).md5"
 fi
