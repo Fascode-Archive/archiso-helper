@@ -246,7 +246,7 @@ en () {
     error_archlinux="The script is able to run in ArchLinux only."
     error_pacman="Failed to execute because pacman was not found"
     error_working_dir_script="Do not specify the directory where the script exists in the working directory."
-    error_filename="A file with the same name already exists. Are you sure you want to overwrite it? (y/N) : "
+    error_filename="${image_file_path} already exists. Are you sure you want to overwrite it? (y/N) : "
     error_architecture="The architecture setting is incorrect."
     error_user="${user} is not exits."
     debug_archiso_package_name="The ArchISO package name is set to ${archiso_package_name}."
