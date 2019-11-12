@@ -223,6 +223,7 @@ fi
 
 ## 設定後変数
 number_of_pkg=${#add_pkg[*]}
+build_aur_script_path=$working_directory/aur.bash
 
 
 ## ネット接続確認
@@ -639,10 +640,21 @@ chmod $perm $image_file_path
 ## MD5
 if [[ $create_md5 = 0 ]]; then
     if [[ $(package_check md5; printf $?) = 0 ]]; then
-        md5 $image_file_path  > "$(basename $image_file_path).md5"
-    else
-        red_log $error_pkg_md5
+        yellow_log $error_pkg_md5
+        wget -O $build_aur_script_path https://raw.githubusercontent.com/Hayao0819/archiso-helper/master/aur.bash
+        ask_user () {
+            echo -n  "一般ユーザー名を入力してください。 : "
+            read aur_user
+        }
+        ask_user
+        while [ $(user_check $aur_user) = 1 ]; do
+            ask_user
+        done
+        su $aur_user -c "$build_aur_script_path md5"
+        pacman -Syy
+        pacman -U $(find $(dirname $build_aur_script_path) -name "md5*.pkg.tar.xz")
     fi
+    md5 $image_file_path  > "$(basename $image_file_path).md5"
 fi
 
 
