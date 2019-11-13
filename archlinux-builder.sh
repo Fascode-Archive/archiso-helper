@@ -689,7 +689,7 @@ chmod $perm $image_file_path
 
 ## MD5
 if [[ $create_md5 = 0 ]]; then
-    if [[ $(package_check md5; printf $?) = 0 ]]; then
+    if [[ $(package_check md5; printf $?) = 1 ]]; then
         yellow_log $error_pkg_md5
         install_aur md5
     fi
