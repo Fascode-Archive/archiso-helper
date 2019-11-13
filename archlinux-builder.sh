@@ -495,7 +495,11 @@ elif [[ $local_archiso_version < $remote_archiso_version ]]; then
         install_pacman archiso
     else
         red_log $error_custom_archiso
-        exit_error
+        install_aur $archiso_package_name
+        if [[ ! $? = 0 ]]; then
+            red_log "AURから「$archiso_package_name」のインストールを試みましたが、何らかのエラーが原因で失敗しました。"
+            exit_error
+        fi
     fi
 elif [[ $local_archiso_version > $remote_archiso_version ]]; then
     yellow_log $log_archiso_newer
