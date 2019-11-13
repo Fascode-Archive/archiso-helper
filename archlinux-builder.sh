@@ -367,7 +367,10 @@ fi
 ## Rootチェック
 if [[ ! $UID = 0 ]]; then
     red_log $error_root
-    exit_error
+    if [[ $msg_dl = 0 ]]; then
+        rm $message_file_path
+    fi
+    exit 1
 fi
 
 
