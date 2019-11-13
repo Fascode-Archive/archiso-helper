@@ -58,10 +58,11 @@ for (( i=0; i<number_of_pkg_aur ; i++ )); do
         mv *.pkg.tar.xz $export_directory
     else
         echo "[$(basename ${BASH_SOURCE[0]})] 出力先に書き込み権限がありません。"
+    fi
     cd - >> /dev/null
     # 削除
     rm -rf $working_directory/${add_pkg_aur[$i]}
-done 
+done
 
 ## 作業ディレクトリ削除
 rm -r $working_directory
