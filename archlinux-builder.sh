@@ -9,6 +9,10 @@ settings_path=$(pwd)/settings.bash
 #もし設定ファイルに変数が存在しない場合はこの設定が上書きされます。
 function settings () {
 
+    ###############################################
+    # ディレクトリを指定する場合は最後に/を入れないでください。
+    ###############################################
+    
     ##言語
     #使用可能な言語はmessage.confで定義されている関数になります。
     msg_language="en"
@@ -85,7 +89,8 @@ function settings () {
     clone_temp="$working_directory/git"
 
     ## archisoの設定プロファイルへのパス
-    #Gitでクローンする場合は保存先以下のディレクトリを指定する必要があります。
+    # Gitでクローンする場合は保存先以下のディレクトリを指定する必要があります。
+    # クローン先ディレクトリとして${clone_temp}を指定できます
     archiso_configs="/usr/share/archiso/configs/releng"
 
     ## Grubの背景（フルパスで記述してください。デフォルトは空です。）
@@ -399,6 +404,13 @@ fi
 ## 作業ディレクトリチェック
 if [[ $current_scriput_dir = $working_directory ]]; then
     red_log $error_working_dir_script
+    exit_error
+fi
+
+
+## Gitクローンディレクトリチェック
+if [[ $clone_temp = $working_directory ]]; then
+    red_log "作業ディレクトリとGitのCloneディレクトリを共通にすることはできません。"
     exit_error
 fi
 
