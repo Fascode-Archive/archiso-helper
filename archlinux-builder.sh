@@ -207,12 +207,16 @@ function install_aur () {
     fi
     # パッケージをaur.bashでビルド
     chmod 755 $build_aur_script_path
-    su $aur_user -c "$build_aur_script_path $1 $(dirname $build_aur_script_path)"
-
+    #su $aur_user -c "$build_aur_script_path $1 $(dirname $build_aur_script_path)"
+    su $aur_user -c "$build_aur_script_path $1"
+    #パッケージを移動
+    pkg_file=$(find $current_scriput_dir -name "$1*.pkg.tar.xz" )
+    mv $pkg_file $working_directory
+    pkg_file=$(find $working_directory -name "$1*.pkg.tar.xz" )
     # 生成されたパッケージを検索してインストール
     pacman -Syy
-    pacman -U $(find $(dirname $build_aur_script_path) -name "$1*.pkg.tar.xz")
-    rm $(find $(dirname $build_aur_script_path) -name "$1*.pkg.tar.xz")
+    pacman -U $pkg_file
+    rm $pkg_file
 }
 
 
