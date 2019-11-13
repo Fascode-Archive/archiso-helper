@@ -82,7 +82,7 @@ function settings () {
     archiso_configs_git=""
 
     ## Gitの保存先
-    clone_temp="/tmp/archiso/git"
+    clone_temp="$working_directory/git"
 
     ## archisoの設定プロファイルへのパス
     #Gitでクローンする場合は保存先以下のディレクトリを指定する必要があります。
