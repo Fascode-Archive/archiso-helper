@@ -54,7 +54,10 @@ for (( i=0; i<number_of_pkg_aur ; i++ )); do
     cd $working_directory/${add_pkg_aur[$i]}
     makepkg -s
     # 移動
-    mv *.pkg.tar.xz $export_directory
+    if [[ -w $export_directory ]]; then
+        mv *.pkg.tar.xz $export_directory
+    else
+        echo "[$(basename ${BASH_SOURCE[0]})] 出力先に書き込み権限がありません。"
     cd - >> /dev/null
     # 削除
     rm -rf $working_directory/${add_pkg_aur[$i]}
