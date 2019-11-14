@@ -702,6 +702,9 @@ fi
 
 ## 権限変更
 blue_log $log_change_perm
+if [[ -z $user ]]; then
+    user=root
+fi
 if [[ -z $group ]]; then
     group=wheel
 fi
