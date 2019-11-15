@@ -188,9 +188,7 @@ function exit_error () {
 # 簡易AURヘルパー
 # 現在複数パッケージの指定はできません
 function install_aur () {
-    if [[ -n $2 ]]; then
-        echo "現在複数のパッケージを同時に指定することはできません。"
-    fi
+    aur=($@)
     # aur.bashをダウンロード
     if [[ -f $build_aur_script_path ]]; then
         rm $build_aur_script_path
@@ -212,16 +210,19 @@ function install_aur () {
     fi
     # パッケージをaur.bashでビルド
     chmod 755 $build_aur_script_path
-    #su $aur_user -c "$build_aur_script_path $1 $(dirname $build_aur_script_path)"
-    su $aur_user -c "$build_aur_script_path $1"
-    #パッケージを移動
-    pkg_file=$(find $current_scriput_dir -name "$1*.pkg.tar.xz" )
-    mv $pkg_file $working_directory
-    pkg_file=$(find $working_directory -name "$1*.pkg.tar.xz" )
-    # 生成されたパッケージを検索してインストール
-    pacman -Syy
-    pacman -U $pkg_file
-    rm $pkg_file
+    for (( i=0; i<$# ; i++ )); do
+        #su $aur_user -c "$build_aur_script_path $1 $(dirname $build_aur_script_path)"
+        su $aur_user -c "$build_aur_script_path ${aur[$i]}"
+        #パッケージを移動
+        pkg_file=$(find $current_scriput_dir -name "${aur[$i]}*.pkg.tar.xz" )
+        mv $pkg_file $working_directory > /dev/null
+        pkg_file=$(find $working_directory -name "${aur[$i]}*.pkg.tar.xz" )
+        # 生成されたパッケージを検索してインストール
+        pacman -Syy --noconfirm
+        pacman -U --noconfirm $pkg_file
+        rm $pkg_file
+    done
+    rm $build_aur_script_path
 }
 
 
