@@ -110,6 +110,10 @@ function settings () {
     # このディレクトリ直下に必ずアーキテクチャ別のディレクトリを作成し、その中に*.pkg.tar.xzを配置してください。
     # 指定したパッケージをインストールする場合は必ずadd_pkgでパッケージ名を指定してください。
     customrepo_directory=
+
+    ## カスタムリポジトリに追加するAURのパッケージ
+    # 必ずカスタムリポジトリのディレクトリを設定してください。
+    add_pkg_aur=()
 }
 
 
@@ -639,6 +643,7 @@ fi
 
 ## カスタムリポジトリの追加
 if [[ -n $customrepo_directory  ]]; then
+    # ディレクトリ作成、チェック
     if [[ ! -d $customrepo_directory ]]; then
         red_log $error_customrepo_dir
         exit_error
@@ -649,6 +654,48 @@ if [[ -n $customrepo_directory  ]]; then
         exit_error
     fi
     cd $customrepo_directory/$make_arch
+
+    if [[ -n $add_pkg_aur ]]; then
+        ## add_pkg_aur
+        function add_aur_to_customrepo () {
+        aur=($@)
+        # aur.bashをダウンロード
+        if [[ -f $build_aur_script_path ]]; then
+            rm $build_aur_script_path
+        fi
+        wget -O $build_aur_script_path https://raw.githubusercontent.com/Hayao0819/archiso-helper/master/aur.bash
+        # 一般ユーザーを設定
+        if [[ -z $aur_user ]]; then
+            ask_user () {
+            echo -n  "一般ユーザー名を入力してください。 : "
+                read aur_user
+                if [[ -z $aur_user ]]; then
+                    ask_user
+                fi
+            }
+            ask_user
+            while [ $(user_check $aur_user) = 1 ]; do
+                ask_user
+            done
+        fi
+        # パッケージをaur.bashでビルド
+        chmod 755 $build_aur_script_path
+        for (( i=0; i<$# ; i++ )); do
+            #su $aur_user -c "$build_aur_script_path $1 $(dirname $build_aur_script_path)"
+            su $aur_user -c "$build_aur_script_path ${aur[$i]}"
+            #パッケージを移動
+            pkg_file=$(find $current_scriput_dir -name "${aur[$i]}*.pkg.tar.xz" )
+            mv $pkg_file $working_directory > /dev/null
+            pkg_file=$(find $working_directory -name "${aur[$i]}*.pkg.tar.xz" )
+            rm $build_aur_script_path
+            mv $pkg_file $customrepo_directory/$make_arch
+        done
+        }
+        
+        add_aur_to_customrepo ${add_pkg_aur[@]}
+    fi
+
+
     blue_log $log_generate_package_list
     if [[ -f $customrepo_directory/$make_arch/customrepo.db.tar.gz ]]; then
         rm customrepo.db
