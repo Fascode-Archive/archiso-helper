@@ -658,43 +658,37 @@ if [[ -n $customrepo_directory  ]]; then
     if [[ -n $add_pkg_aur ]]; then
         ## add_pkg_aur
         function add_aur_to_customrepo () {
-        aur=($@)
-        # aur.bashをダウンロード
-        if [[ -f $build_aur_script_path ]]; then
-            rm $build_aur_script_path
-        fi
-        wget -O $build_aur_script_path https://raw.githubusercontent.com/Hayao0819/archiso-helper/master/aur.bash
-        # 一般ユーザーを設定
-        if [[ -z $aur_user ]]; then
-            ask_user () {
-            echo -n  "一般ユーザー名を入力してください。 : "
-                read aur_user
-                if [[ -z $aur_user ]]; then
-                    ask_user
-                fi
-            }
-            ask_user
-            while [ $(user_check $aur_user) = 1 ]; do
+            # aur.bashをダウンロード
+            if [[ -f $build_aur_script_path ]]; then
+                rm $build_aur_script_path
+            fi
+            wget -O $build_aur_script_path https://raw.githubusercontent.com/Hayao0819/archiso-helper/master/aur.bash
+            # 一般ユーザーを設定
+            if [[ -z $aur_user ]]; then
+                ask_user () {
+                    echo -n  "一般ユーザー名を入力してください。 : "
+                    read aur_user
+                    if [[ -z $aur_user ]]; then
+                        ask_user
+                    fi
+                }
                 ask_user
-            done
-        fi
-        # パッケージをaur.bashでビルド
-        chmod 755 $build_aur_script_path
-        for (( i=0; i<$# ; i++ )); do
+                while [ $(user_check $aur_user) = 1 ]; do
+                    ask_user
+                done
+            fi
+            # パッケージをaur.bashでビルド
+            chmod 755 $build_aur_script_path
             #su $aur_user -c "$build_aur_script_path $1 $(dirname $build_aur_script_path)"
-            su $aur_user -c "$build_aur_script_path ${aur[$i]}"
+            su $aur_user -c "$build_aur_script_path $1"
             #パッケージを移動
-            pkg_file=$(find $current_scriput_dir -name "${aur[$i]}*.pkg.tar.xz" )
-            mv $pkg_file $working_directory > /dev/null
-            pkg_file=$(find $working_directory -name "${aur[$i]}*.pkg.tar.xz" )
-            rm $build_aur_script_path
-            mv $pkg_file $customrepo_directory/$make_arch
-        done
+            pkg_file=$(find $current_scriput_dir -name "$1*.pkg.tar.xz" )
+            return 0
         }
-        
-        add_aur_to_customrepo ${add_pkg_aur[@]}
+        for (( i=0; i<number_add_pkg_aur ; i++ )); do
+            add_aur_to_customrepo ${add_pkg_aur[$i]}
+        done
     fi
-
 
     blue_log $log_generate_package_list
     if [[ -f $customrepo_directory/$make_arch/customrepo.db.tar.gz ]]; then
