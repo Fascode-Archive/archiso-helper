@@ -2,7 +2,6 @@
 
 ## 変数
 working_directory=/tmp/build_aur
-number_of_pkg_aur=${#add_pkg_aur[*]}
 export_directory=$(pwd)
 
 
@@ -22,7 +21,7 @@ elif [[ -z $@ ]]; then
 else
     add_pkg_aur=($@)
 fi
-
+number_of_pkg_aur=${#add_pkg_aur[*]}
 
 ## Gitチェック
 if [[ -z $( pacman -Q | awk '{print $1}' | grep -x "git" ) ]]; then
