@@ -1,7 +1,6 @@
 #!/usr/bin/env bash
 
 ## 変数
-add_pkg_aur=($@)
 working_directory=/tmp/build_aur
 number_of_pkg_aur=${#add_pkg_aur[*]}
 export_directory=$(pwd)
@@ -15,9 +14,13 @@ fi
 
 
 # 引数チェック
-if [[ -z $@ ]]; then
+if [[ -f $1 ]]; then
+    add_pkg_aur=($(cat $1))
+elif [[ -z $@ ]]; then
     echo "何も指定されていません。"
     exit 1
+else
+    add_pkg_aur=($@)
 fi
 
 
