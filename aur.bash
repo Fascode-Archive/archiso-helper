@@ -55,7 +55,7 @@ for (( i=0; i<number_of_pkg_aur ; i++ )); do
     git clone https://aur.archlinux.org/${add_pkg_aur[$i]}.git $working_directory/${add_pkg_aur[$i]}
     # ビルド
     cd $working_directory/${add_pkg_aur[$i]}
-    makepkg -s
+    makepkg -s --noconfirm
     # 移動
     if [[ -w $export_directory ]]; then
         mv *.pkg.tar.xz $export_directory
