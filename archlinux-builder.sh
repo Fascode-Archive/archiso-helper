@@ -552,7 +552,10 @@ else
         Y ) del ;;
         Yes ) del ;;
         yes ) del ;;
-        * ) exit_error
+        * )   if [[ $msg_dl = 0 ]]; then
+                  rm $message_file_path
+              fi
+              exit 1;;
     esac
     mkdir -p $working_directory
     chmod 755 $working_directory
