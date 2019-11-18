@@ -114,6 +114,10 @@ function settings () {
     ## カスタムリポジトリに追加するAURのパッケージ
     # 必ずカスタムリポジトリのディレクトリを設定、作成してください。
     add_pkg_aur=()
+
+    ## 作業ディレクトリを終了時に削除するかどうか
+    # デバッグ用です。 0=有効 それ以外=無効
+    delete_working_dir=
 }
 
 
@@ -180,7 +184,7 @@ function install_pacman () {
 
 # エラーによる終了時の処理
 function exit_error () {
-    if [[ -d $working_directory ]]; then
+    if [[ -d $working_directory && ! $delete_working_dir = 0 ]]; then
         rm -rf $working_directory
     fi
     if [[ $msg_dl = 0 ]]; then
