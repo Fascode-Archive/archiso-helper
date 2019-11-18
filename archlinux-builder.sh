@@ -201,7 +201,7 @@ function install_aur () {
     # 一般ユーザーを設定
     if [[ -z $aur_user ]]; then
         ask_user () {
-            echo -n  "一般ユーザー名を入力してください。 : "
+            echo -n $ask_general_user
             read aur_user
             if [[ -z $aur_user ]]; then
                 ask_user
@@ -293,10 +293,12 @@ fi
 ## ベースメッセージ定義
 en () {
     error_check_pkg="package_check : Please specify a package."
+    ask_general_user="Please enter a general user name. : "
     error_root="You need root permission."
     error_archlinux="The script is able to run in ArchLinux only."
     error_pacman="Failed to execute because pacman was not found"
     error_working_dir_script="Do not specify the directory where the script exists in the working directory."
+    error_working_dir_git="The working directory and the Git Clone directory cannot be shared."
     error_filename="${image_file_path} already exists. Are you sure you want to overwrite it? (y/N) : "
     error_architecture="The architecture setting is incorrect."
     error_user="${user} is not exits."
@@ -311,6 +313,7 @@ en () {
     debug_local_archiso_ver="The local archiso version is fixed at ${local_archiso_version}."
     log_archiso_not_installed="ArchISO is not installed."
     log_install_archiso="Install ArchISO."
+    error_custom_archiso_install="An attempt to install ${archiso_package_name} from the AUR failed due to some error."
     error_custom_archiso="Install ${archiso_package_name} manually."
     log_archiso_iinstalled="ArchISO is installed."
     log_archiso_older="But ArchISO is not latest."
@@ -416,7 +419,7 @@ fi
 
 ## Gitクローンディレクトリチェック
 if [[ $clone_temp = $working_directory ]]; then
-    red_log "作業ディレクトリとGitのCloneディレクトリを共通にすることはできません。"
+    red_log $error_working_dir_git
     exit_error
 fi
 
@@ -515,10 +518,10 @@ elif [[ $local_archiso_version < $remote_archiso_version ]]; then
     if [[ $archiso_package_name = "archiso" ]]; then
         install_pacman archiso
     else
-        red_log $error_custom_archiso
         install_aur $archiso_package_name
         if [[ ! $? = 0 ]]; then
-            red_log "AURから「$archiso_package_name」のインストールを試みましたが、何らかのエラーが原因で失敗しました。"
+            red_log $error_custom_archiso_install
+            red_log $error_custom_archiso
             exit_error
         fi
     fi
@@ -660,7 +663,7 @@ if [[ -n $customrepo_directory  ]]; then
             # 一般ユーザーを設定
             if [[ -z $aur_user ]]; then
                 ask_user () {
-                    echo -n  "一般ユーザー名を入力してください。 : "
+                    echo -n  $ask_general_user
                     read aur_user
                     if [[ -z $aur_user ]]; then
                         ask_user
