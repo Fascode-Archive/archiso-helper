@@ -66,7 +66,7 @@ function ans () {
 
 cat <<EOF
 ===================================
-ArchISO Helper
+ArchLinux ISO Auto Builder
 Mail: shun819.mail@gmail.com
 Twitter : @Hayao0819
 ===================================
@@ -85,7 +85,7 @@ blue_log "インターネット接続をチェックしています。"
 if [[ ! $(ping "google.com"  -c 1 >> /dev/null ; echo $?) = 0 ]]; then
     red_log "インターネットに接続されていません。"
 else
-    blue_log "The network connection was confirmed."
+    blue_log "ネットワークに接続されています。"
 fi
 
 
