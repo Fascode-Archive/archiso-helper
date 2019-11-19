@@ -208,11 +208,15 @@ function install_aur () {
             echo -n $ask_general_user
             read aur_user
             if [[ -z $aur_user ]]; then
+            red_log "ユーザー名を入力してください"
                 ask_user
             fi
         }
         ask_user
         while [ $(user_check $aur_user) = 1 ]; do
+            if [[ $(user_check $aur_user) = 1 ]]; then
+                red_log "存在しているユーザを入力してください。"
+            fi
             ask_user
         done
     fi
