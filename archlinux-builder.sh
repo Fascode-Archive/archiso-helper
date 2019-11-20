@@ -790,7 +790,7 @@ chmod $perm $image_file_path.md5
 
 
 ## 作業ディレクトリ削除
-if [[ -d $working_directory ]]; then
+if [[ -d $working_directory && ! $delete_working_dir = 0 ]]; then
     blue_log $log_delete_working_dir
     rm -rf $working_directory
 else
