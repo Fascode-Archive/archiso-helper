@@ -797,10 +797,14 @@ else
     red_log $error_working_dir_not_found
 fi
 
+
+## Gitのcloneに使用したディレクトリを削除
 if [[ -d $clone_temp && -z $archiso_configs_git ]]; then
     rm -r $clone_temp
 fi
 
+
+## 自動で作成したリポジトリを削除
 if [[ $auto_make_customrepo = 0 ]]; then
     suro rm -r $customrepo_directory
 fi
