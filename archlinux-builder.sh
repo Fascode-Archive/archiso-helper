@@ -112,7 +112,7 @@ function settings () {
     customrepo_directory=
 
     ## カスタムリポジトリに追加するAURのパッケージ
-    # 必ずカスタムリポジトリのディレクトリを設定、作成してください。
+    # 必ずカスタムリポジトリのディレクトリが設定されていない場合は作業ディレクトリ内に「customrepo」ディレクトリが作成されます。
     add_pkg_aur=()
 
     ## 作業ディレクトリを終了時に削除するかどうか
@@ -649,6 +649,48 @@ if [[ -n $customize_airootfs_path ]]; then
 fi
 
 
+## AURパッケージ角追加
+if [[ -n $add_pkg_aur ]]; then
+    if [[ -z $customrepo_directory ]]; then
+        mkdir -p $working_directory/customrepo/$make_arch
+        customrepo_directory=$working_directory/customrepo
+    fi
+    cd $customrepo_directory/$make_arch
+    function add_aur_to_customrepo () {
+        # aur.bashをダウンロード
+        if [[ -f $build_aur_script_path ]]; then
+            rm $build_aur_script_path
+        fi
+        wget -O $build_aur_script_path https://raw.githubusercontent.com/Hayao0819/archiso-helper/master/aur.bash
+        # 一般ユーザーを設定
+        if [[ -z $aur_user ]]; then
+            ask_user () {
+                echo -n  $ask_general_user
+                read aur_user
+                if [[ -z $aur_user ]]; then
+                    ask_user
+                fi
+            }
+            ask_user
+            while [ $(user_check $aur_user) = 1 ]; do
+                    ask_user
+            done
+        fi
+        # パッケージをaur.bashでビルド
+        chmod 755 $build_aur_script_path
+        #su $aur_user -c "$build_aur_script_path $1 $(dirname $build_aur_script_path)"
+        su $aur_user -c "$build_aur_script_path $1"
+        #パッケージを移動
+        pkg_file=$(find $current_scriput_dir -name "$1*.pkg.tar.xz" )
+        return 0
+    }
+    for (( i=0; i<number_add_pkg_aur ; i++ )); do
+        add_aur_to_customrepo ${add_pkg_aur[$i]}
+    done
+    cd - > /dev/null
+fi
+
+
 ## カスタムリポジトリの追加
 if [[ -n $customrepo_directory  ]]; then
     # ディレクトリ作成、チェック
@@ -662,42 +704,6 @@ if [[ -n $customrepo_directory  ]]; then
         exit_error
     fi
     cd $customrepo_directory/$make_arch
-
-    if [[ -n $add_pkg_aur ]]; then
-        ## add_pkg_aur
-        function add_aur_to_customrepo () {
-            # aur.bashをダウンロード
-            if [[ -f $build_aur_script_path ]]; then
-                rm $build_aur_script_path
-            fi
-            wget -O $build_aur_script_path https://raw.githubusercontent.com/Hayao0819/archiso-helper/master/aur.bash
-            # 一般ユーザーを設定
-            if [[ -z $aur_user ]]; then
-                ask_user () {
-                    echo -n  $ask_general_user
-                    read aur_user
-                    if [[ -z $aur_user ]]; then
-                        ask_user
-                    fi
-                }
-                ask_user
-                while [ $(user_check $aur_user) = 1 ]; do
-                    ask_user
-                done
-            fi
-            # パッケージをaur.bashでビルド
-            chmod 755 $build_aur_script_path
-            #su $aur_user -c "$build_aur_script_path $1 $(dirname $build_aur_script_path)"
-            su $aur_user -c "$build_aur_script_path $1"
-            #パッケージを移動
-            pkg_file=$(find $current_scriput_dir -name "$1*.pkg.tar.xz" )
-            return 0
-        }
-        for (( i=0; i<number_add_pkg_aur ; i++ )); do
-            add_aur_to_customrepo ${add_pkg_aur[$i]}
-        done
-    fi
-
     blue_log $log_generate_package_list
     if [[ -f $customrepo_directory/$make_arch/customrepo.db.tar.gz ]]; then
         rm customrepo.db
@@ -706,7 +712,7 @@ if [[ -n $customrepo_directory  ]]; then
         rm customrepo.files.tar.gz
     fi
     repo-add customrepo.db.tar.gz *.pkg.tar.xz
-    cd $current_scriput_dir
+    cd - > /dev/null
     blue_log $log_register_customrepo
     echo -e "[customrepo]\nSigLevel = Optional TrustAll\nServer = file://$customrepo_directory/$make_arch" >> $working_directory/pacman.conf
 
