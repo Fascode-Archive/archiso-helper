@@ -651,9 +651,27 @@ fi
 
 ## AURパッケージの追加
 if [[ -n $add_pkg_aur ]]; then
+    # 一般ユーザーを設定
+    if [[ -z $aur_user ]]; then
+        ask_user () {
+            echo -n  $ask_general_user
+            read aur_user
+            if [[ -z $aur_user ]]; then
+                ask_user
+            fi
+        }
+        ask_user
+        while [ $(user_check $aur_user) = 1 ]; do
+                ask_user
+        done
+    fi
+    # ディレクトリを作成
     if [[ -z $customrepo_directory ]]; then
         mkdir -p $current_scriput_dir/customrepo/$make_arch
         customrepo_directory=$current_scriput_dir/customrepo
+        chown -R $aur_user $customrepo_directory
+        # 自動でcustomrepoを生成した（0=yes 1=no）
+        auto_make_customrepo=0
     fi
     cd $customrepo_directory/$make_arch
     function add_aur_to_customrepo () {
@@ -662,26 +680,14 @@ if [[ -n $add_pkg_aur ]]; then
             rm $build_aur_script_path
         fi
         wget -O $build_aur_script_path https://raw.githubusercontent.com/Hayao0819/archiso-helper/master/aur.bash
-        # 一般ユーザーを設定
-        if [[ -z $aur_user ]]; then
-            ask_user () {
-                echo -n  $ask_general_user
-                read aur_user
-                if [[ -z $aur_user ]]; then
-                    ask_user
-                fi
-            }
-            ask_user
-            while [ $(user_check $aur_user) = 1 ]; do
-                    ask_user
-            done
-        fi
         # パッケージをaur.bashでビルド
         chmod 755 $build_aur_script_path
         #su $aur_user -c "$build_aur_script_path $1 $(dirname $build_aur_script_path)"
-        su $aur_user -c "$build_aur_script_path $1"
+        #su $aur_user -c "$build_aur_script_path $1"
+        su $aur_user -c "$build_aur_script_path $1 $customrepo_directory/$make_arch"
         #パッケージを移動
         pkg_file=$(find $current_scriput_dir -name "$1*.pkg.tar.xz" )
+        echo $pkg_file
         return 0
     }
     for (( i=0; i<number_add_pkg_aur ; i++ )); do
@@ -790,6 +796,10 @@ fi
 
 if [[ -d $clone_temp && -z $archiso_configs_git ]]; then
     rm -r $clone_temp
+fi
+
+if [[ $auto_make_customrepo = 0 ]]; then
+    suro rm -r $customrepo_directory
 fi
 
 
