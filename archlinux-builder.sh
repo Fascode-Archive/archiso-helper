@@ -649,11 +649,11 @@ if [[ -n $customize_airootfs_path ]]; then
 fi
 
 
-## AURパッケージ角追加
+## AURパッケージの追加
 if [[ -n $add_pkg_aur ]]; then
     if [[ -z $customrepo_directory ]]; then
-        mkdir -p $working_directory/customrepo/$make_arch
-        customrepo_directory=$working_directory/customrepo
+        mkdir -p $current_scriput_dir/customrepo/$make_arch
+        customrepo_directory=$current_scriput_dir/customrepo
     fi
     cd $customrepo_directory/$make_arch
     function add_aur_to_customrepo () {
