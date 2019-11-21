@@ -812,7 +812,7 @@ fi
 
 ## 自動で作成したリポジトリを削除
 if [[ $auto_make_customrepo = 0 ]]; then
-    suro rm -r $customrepo_directory
+    rm -r $customrepo_directory
 fi
 
 
