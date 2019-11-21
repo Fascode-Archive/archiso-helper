@@ -669,12 +669,18 @@ if [[ -n $add_pkg_aur ]]; then
         done
     fi
     # ディレクトリを作成
-    if [[ -z $customrepo_directory || ! -d $customrepo_directory ]]; then
+    if [[ -z $customrepo_directory ]]; then
         mkdir -p $current_scriput_dir/customrepo/$make_arch
         customrepo_directory=$current_scriput_dir/customrepo
         chown -R $aur_user $customrepo_directory
         # 自動でcustomrepoを生成した（0=yes 1=no）
         auto_make_customrepo=0
+    elif [[ ! -d $customrepo_directory ]]; then
+        mkdir -p $customrepo_directory/$make_arch
+        chown -R $aur_user $customrepo_directory
+        auto_make_customrepo=0
+    else
+        auto_make_customrepo=1
     fi
     cd $customrepo_directory/$make_arch
     function add_aur_to_customrepo () {
