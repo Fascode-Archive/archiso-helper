@@ -124,14 +124,14 @@ function settings () {
 ## 関数定義
 # 赤（エラー時）
 function red_log () {
-    echo -e "\033[0;31m$@\033[0;39m" >&2
+    echo -e "\033[1;31m$@\033[0;39m" >&2
     return 0
 }
 
 # 青（通常のログ）
 function blue_log () {
     if [[ ! $log = 1 ]]; then
-        echo -e "\033[0;34m$@\033[0;39m"
+        echo -e "\033[1;36m$@\033[0;39m"
     fi
     return 0
 }
