@@ -669,7 +669,7 @@ if [[ -n $add_pkg_aur ]]; then
         done
     fi
     # ディレクトリを作成
-    if [[ -z $customrepo_directory ]]; then
+    if [[ -z $customrepo_directory || ! -d $customrepo_directory ]]; then
         mkdir -p $current_scriput_dir/customrepo/$make_arch
         customrepo_directory=$current_scriput_dir/customrepo
         chown -R $aur_user $customrepo_directory
@@ -686,11 +686,11 @@ if [[ -n $add_pkg_aur ]]; then
         # パッケージをaur.bashでビルド
         chmod 755 $build_aur_script_path
         #su $aur_user -c "$build_aur_script_path $1 $(dirname $build_aur_script_path)"
-        #su $aur_user -c "$build_aur_script_path $1"
-        su $aur_user -c "$build_aur_script_path $1 $customrepo_directory/$make_arch"
+        su $aur_user -c "$build_aur_script_path $1"
+        #su $aur_user -c "$build_aur_script_path $1 $customrepo_directory/$make_arch"
         #パッケージを移動
         pkg_file=$(find $current_scriput_dir -name "$1*.pkg.tar.xz" )
-        echo $pkg_file
+        #blue_log "Generated $pkg_file"
         return 0
     }
     for (( i=0; i<number_add_pkg_aur ; i++ )); do
