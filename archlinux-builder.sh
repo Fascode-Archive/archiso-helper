@@ -211,15 +211,13 @@ function install_aur () {
             echo -n $ask_general_user
             read aur_user
             if [[ -z $aur_user ]]; then
-            red_log "ユーザー名を入力してください"
+                red_log "ユーザー名を入力してください"
                 ask_user
             fi
         }
         ask_user
         while [ $(user_check $aur_user) = 1 ]; do
-            if [[ $(user_check $aur_user) = 1 ]]; then
-                red_log "存在しているユーザを入力してください。"
-            fi
+            red_log "存在しているユーザを入力してください。"
             ask_user
         done
     fi
@@ -657,15 +655,17 @@ if [[ -n $add_pkg_aur ]]; then
     # 一般ユーザーを設定
     if [[ -z $aur_user ]]; then
         ask_user () {
-            echo -n  $ask_general_user
+            echo -n $ask_general_user
             read aur_user
             if [[ -z $aur_user ]]; then
+                red_log "ユーザー名を入力してください"
                 ask_user
             fi
         }
         ask_user
         while [ $(user_check $aur_user) = 1 ]; do
-                ask_user
+            red_log "存在しているユーザを入力してください。"
+            ask_user
         done
     fi
     # ディレクトリを作成
