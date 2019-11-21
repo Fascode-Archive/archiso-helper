@@ -191,7 +191,7 @@ function exit_error () {
         rm $message_file_path
     fi
     if [[ $auto_make_customrepo = 0 && -d $customrepo_directory ]]; then
-        suro rm -r $customrepo_directory
+        rm -r $customrepo_directory
     fi
     exit 1
 }
