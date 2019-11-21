@@ -36,18 +36,6 @@ if [[ ! -d $working_directory ]]; then
 fi
 
 
-# 出力先ディレクトリ
-if [[ -n $2 ]]; then
-    if [[ -d $2 ]]; then
-        export_directory=$2
-    else
-        export_directory=$(pwd)
-    fi
-else
-    export_directory=$(pwd)
-fi
-
-
 ## ビルド
 for (( i=0; i<number_of_pkg_aur ; i++ )); do
     # Clone
