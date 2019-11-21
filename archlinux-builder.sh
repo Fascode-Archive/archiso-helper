@@ -318,6 +318,7 @@ en () {
     debug_overlay_dir="The G overlay directory is set to ${overlay_directory}."
     debug_customrepo="The custom repository is set to ${customrepo_directory}."
     debug_airootfs="The path of customize_airootfs.sh is set to ${customize_airootfs_path}."
+    debug_aur="Automatically add ${add_pkg_aur[@]} from AUR."
     debug_remote_archiso_ver="The remote archiso version is fixed at ${remote_archiso_version}."
     debug_local_archiso_ver="The local archiso version is fixed at ${local_archiso_version}."
     log_archiso_not_installed="ArchISO is not installed."
@@ -493,6 +494,9 @@ if [[ -n $customrepo_directory ]]; then
 fi
 if [[ -n $customize_airootfs_path ]]; then
     yellow_log $debug_airootfs
+fi
+if [[ -n $add_pkg_aur ]]; then
+    yellow_log $debug_aur
 fi
 
 
