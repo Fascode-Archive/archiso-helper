@@ -116,7 +116,7 @@ function settings () {
     add_pkg_aur=()
 
     ## 作業ディレクトリを終了時に削除するかどうか
-    # デバッグ用です。 0=有効 それ以外=無効
+    # デバッグ用です。 0=削除する 1=削除しない それ以外=削除する
     delete_working_dir=
 }
 
@@ -184,7 +184,7 @@ function install_pacman () {
 
 # エラーによる終了時の処理
 function exit_error () {
-    if [[ -d $working_directory && ! $delete_working_dir = 0 ]]; then
+    if [[ -d $working_directory && ! $delete_working_dir = 1 ]]; then
         rm -rf $working_directory
     fi
     if [[ $msg_dl = 0 ]]; then
@@ -291,7 +291,7 @@ build_aur_script_path=$working_directory/aur.bash
 
 ## ネット接続確認
 blue_log "Checking network connection ..."
-if [[ ! $(ping $check_url  -c 1 >> /dev/null ; echo $?) = 0 ]]; then
+if [[ ! $(ping $check_url  -c 1 >> /dev/null ; printf $?) = 0 ]]; then
     red_log "There is no network connection."
     exit 1
 else
@@ -621,6 +621,10 @@ else
     fi
     exit_error
 fi
+if [[ ! -f $working_directory/build.sh ]]; then
+    red_log "build.shがありません"
+    exit_error
+fi
 
 
 ## Grub背景の置き換え
@@ -804,7 +808,7 @@ chmod $perm $image_file_path.md5
 
 
 ## 作業ディレクトリ削除
-if [[ -d $working_directory && ! $delete_working_dir = 0 ]]; then
+if [[ -d $working_directory && ! $delete_working_dir = 1 ]]; then
     blue_log $log_delete_working_dir
     rm -rf $working_directory
 else
