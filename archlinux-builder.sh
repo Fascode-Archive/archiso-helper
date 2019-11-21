@@ -733,7 +733,11 @@ if [[ -n $customrepo_directory  ]]; then
     repo-add customrepo.db.tar.gz *.pkg.tar.xz
     cd - > /dev/null
     blue_log $log_register_customrepo
-    echo -e "[customrepo]\nSigLevel = Optional TrustAll\nServer = file://$customrepo_directory/$make_arch" >> $working_directory/pacman.conf
+
+    # 注意：パッケージの認証を行う場合は上のコメントを外し、下をコメントアウトしてください。
+    # デフォルトではカスタムリポジトリのパッケージ認証は行いません。
+    #echo -e "[customrepo]\nSigLevel = Optional TrustAll\nServer = file://$customrepo_directory/$make_arch" >> $working_directory/pacman.conf
+    echo -e "[customrepo]\nSigLevel = Never TrustAll\nServer = file://$customrepo_directory/$make_arch" >> $working_directory/pacman.conf
 
     ## customize_airootfs.shにて、カスタムリポジトリの設定を削除
     line_number=$(wc -l $working_directory/pacman.conf | awk '{print $1}')
