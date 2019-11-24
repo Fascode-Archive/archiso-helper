@@ -332,6 +332,7 @@ fi
 number_of_pkg=${#add_pkg[*]}
 number_add_pkg_aur=${#add_pkg_aur[*]}
 build_aur_script_path=$working_directory/aur.bash
+make_arch=x86_64
 
 
 ## ネット接続確認
@@ -503,12 +504,14 @@ fi
 
 
 ## アーキテクチャチェック
+<< COMMENT
 case $make_arch in
     i686 ) : ;;
     x86_64 ) : ;;
     * ) red_log $error_architecture
         exit_error ;;
 esac
+COMMENT
 
 
 ## ユーザーチェック
