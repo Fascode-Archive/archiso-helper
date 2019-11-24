@@ -77,6 +77,23 @@ ArchLinuxの純粋なLiveCDを生成します。（これが本来作りたか�
 ./aur.bash hogehoge fugafuga
 ```
 
+## mkarchiso-jp-bar.patch
+ArchISOの本体であるmkarchisoへパッチを行うものです。
+このパッチはmkarchisoにて以下のことを可能にします。
+- pacman等のメッセージの日本語化
+- squashfsのバーの表示
+パッチは以下のコマンドで適用できます。
+
+```bash
+sudo patch < mkarchiso-jp-bar.patch
+```
+
+パッチを適用前に戻すには以下のコマンドを実行してください。
+
+```bash
+sudo patch -R -u < mkarchiso-jp-bar.patch
+```
+
 
 # i686
 
