@@ -227,8 +227,9 @@ function install_pacman () {
     pacman -S --noconfirm $@
 }
 
-# エラーによる終了時の処理
-function exit_error () {
+
+# 余分なファイルを削除
+cleanup () {
     if [[ -d $working_directory && ! $delete_working_dir = 1 ]]; then
         rm -rf $working_directory
     fi
@@ -238,6 +239,13 @@ function exit_error () {
     if [[ $auto_make_customrepo = 0 && -d $customrepo_directory ]]; then
         rm -r $customrepo_directory
     fi
+    if [[ -n $(printf "$archiso_configs_git" | grep -Eo "http(s?)://(\w|:|%|#|\$|&|\?|\(|\)|~|\.|=|\+|\-|/)+") && -d $clone_temp ]]; then
+        rm -rf $clone_temp
+    fi
+}
+# エラーによる終了時の処理
+function exit_error () {
+    cleanup
     exit 1
 }
 
