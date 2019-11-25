@@ -821,15 +821,15 @@ done
 ## ISO作成
 blue_log $log_start_build
 cd $working_directory
-$working_directory/build.sh -v
+#$working_directory/build.sh -v
 
 
 #--------------------------------------------------------------#
 # enable build
-# verbose="-v"
+verbose="-v"
 # build.sh
 
-<< COMMENT
+#<< COMMENT
 
 set -e -u
 
@@ -838,12 +838,12 @@ iso_label="ARCH_$(date +%Y%m)"
 iso_publisher="Arch Linux <http://www.archlinux.org>"
 iso_application="Arch Linux Live/Rescue CD"
 iso_version=$(date +%Y.%m.%d)
-install_dir=arch
-work_dir=work
-out_dir=out
+install_dir=$make_arch
+work_dir=$working_directory/work
+out_dir=$(dirname $image_file_path)
 gpg_key=
 
-verbose=""
+#verbose=""
 script_path=$(readlink -f ${0%/*})
 
 umask 0022
@@ -1093,8 +1093,9 @@ run_once make_efiboot
 run_once make_prepare
 run_once make_iso
 
+set +e +u
 #--------------------------------------------------------------#
-COMMENT
+#COMMENT
 
 cd - > /dev/null
 if [[ ! $? = 0 ]]; then
