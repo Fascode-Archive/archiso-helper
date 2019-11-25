@@ -821,13 +821,13 @@ else
     iso_label="ARCH_$(date +%Y%m%d)"
     iso_publisher="Arch Linux <http://www.archlinux.org>"
     iso_application="Arch Linux Live/Rescue CD"
-    install_dir=$make_arch
+    install_dir=arch
     work_dir=$working_directory/work
     out_dir=$image_file_dir
     gpg_key=
 
     #verbose=""
-    script_path=$(readlink -f ${0%/*})
+    script_path=$working_directory
 
     umask 0022
 
