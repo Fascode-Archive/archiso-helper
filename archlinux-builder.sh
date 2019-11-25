@@ -25,11 +25,6 @@ function settings () {
     working_directory="/tmp/archiso"
 
 
-    ## 生成したいアーキテクチャ
-    # i686 or x86_64）を入力してください（i686は非公式リポジトリを使用します。
-    make_arch=x86_64
-
-
     ## 作成後のイメージファイルの名前
     # それぞれ${yaer}、${month}、${day}で年、月、日に置き換えることができます。
     # ${make_arch}で生成するアーキテクチャに置き換えることができます。
@@ -309,6 +304,7 @@ month=$(date "+%m")
 day=$(date "+%d")
 current_scriput_path=$(cd $(dirname $0) && pwd)/$(basename $0)
 current_scriput_dir=$(pwd)
+make_arch=$(uname -m)
 
 
 ## 設定読み込み
@@ -513,17 +509,6 @@ if [[ -f $image_file_path ]]; then
 fi
 
 
-## アーキテクチャチェック
-<< COMMENT
-case $make_arch in
-    i686 ) : ;;
-    x86_64 ) : ;;
-    * ) red_log $error_architecture
-        exit_error ;;
-esac
-COMMENT
-
-
 ## ユーザーチェック
 if [[ ! $(user_check $user ) = 0 ]]; then
     red_log $error_user
@@ -644,18 +629,6 @@ fi
 if [[ -d $archiso_configs ]]; then
     blue_log $log_copy_config_dir
     cp -r $archiso_configs/* $working_directory
-    # i686追加処理
-    if [[ $make_arch = "i686" ]]; then
-        # i686用ビルドスクリプト
-        if [[ ! -f $i686_build_script ]]; then
-            red_log $error_i686_not_found
-             wget https://raw.githubusercontent.com/Hayao0819/archlinux-latest-livecd-builder/master/build_i686.sh
-        else
-            # スクリプト移動
-            rm $working_directory/build.sh
-            cp $i686_build_script $working_directory/build.sh
-        fi
-    fi
 # Git URL判定
 elif [[  -n $(printf "$archiso_configs_git" | grep -Eo "http(s?)://(\w|:|%|#|\$|&|\?|\(|\)|~|\.|=|\+|\-|/)+")  ]]; then
     # Gitインストール
