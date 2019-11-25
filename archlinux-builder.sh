@@ -1034,27 +1034,6 @@ make_iso() {
 }
 
 
-<<DISABLED
-while getopts 'N:V:L:P:A:D:w:o:g:vh' arg; do
-    case "${arg}" in
-        N) iso_name="${OPTARG}" ;;
-        L) iso_label="${OPTARG}" ;;
-        P) iso_publisher="${OPTARG}" ;;
-        A) iso_application="${OPTARG}" ;;
-        D) install_dir="${OPTARG}" ;;
-        w) work_dir="${OPTARG}" ;;
-        o) out_dir="${OPTARG}" ;;
-        g) gpg_key="${OPTARG}" ;;
-        v) verbose="-v" ;;
-        h) _usage 0 ;;
-        *)
-           echo "Invalid argument '${arg}'"
-           _usage 1
-           ;;
-    esac
-done
-DISABLED
-
 mkdir -p ${work_dir}
 
 run_once make_pacman_conf
