@@ -1141,7 +1141,9 @@ if [[ -d $working_directory && ! $delete_working_dir = 1 ]]; then
     blue_log $log_delete_working_dir
     rm -rf $working_directory
 else
-    red_log $error_working_dir_not_found
+    if [[ ! -d $working_directory ]]; then
+        red_log $error_working_dir_not_found
+    fi
 fi
 
 
