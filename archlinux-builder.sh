@@ -30,11 +30,16 @@ function settings () {
     make_arch=x86_64
 
 
-    ## 作成後のイメージファイルのパス
-    # フルパスで表記してください。それぞれ${yaer}、${month}、${day}で年、月、日に置き換えることができます。
+    ## 作成後のイメージファイルの名前
+    # それぞれ${yaer}、${month}、${day}で年、月、日に置き換えることができます。
     # ${make_arch}で生成するアーキテクチャに置き換えることができます。
     # ここの値が不正な場合、失敗するか作業ディレクトリ/outに作成されます。
-    image_file_path="/home/archlinux-${year}.${month}.${day}-${make_arch}.iso"
+    image_file_name="archlinux-${year}.${month}.${day}-${make_arch}.iso"
+
+
+    # 保存先のディレクトリ
+    # イメージファイルを保存するディレクトリです。
+    image_file_dir="/home"
 
 
     ## 追加する公式リポジトリのパッケージ
@@ -333,6 +338,7 @@ number_of_pkg=${#add_pkg[*]}
 number_add_pkg_aur=${#add_pkg_aur[*]}
 build_aur_script_path=$working_directory/aur.bash
 make_arch=x86_64
+image_file_path=$image_file_dir/$image_file_name
 
 
 ## ネット接続確認
@@ -829,47 +835,22 @@ cd $working_directory
 verbose="-v"
 # build.sh
 
-#<< COMMENT
 
 set -e -u
 
 iso_name=archlinux
-iso_label="ARCH_$(date +%Y%m)"
+iso_label="ARCH_$(date +%Y%m%d)"
 iso_publisher="Arch Linux <http://www.archlinux.org>"
 iso_application="Arch Linux Live/Rescue CD"
-iso_version=$(date +%Y.%m.%d)
 install_dir=$make_arch
 work_dir=$working_directory/work
-out_dir=$(dirname $image_file_path)
+out_dir=$image_file_dir
 gpg_key=
 
 #verbose=""
 script_path=$(readlink -f ${0%/*})
 
 umask 0022
-
-_usage ()
-{
-    echo "usage ${0} [options]"
-    echo
-    echo " General options:"
-    echo "    -N <iso_name>      Set an iso filename (prefix)"
-    echo "                        Default: ${iso_name}"
-    echo "    -V <iso_version>   Set an iso version (in filename)"
-    echo "                        Default: ${iso_version}"N
-    echo "                        Default: '${iso_publisher}'"
-    echo "    -A <application>   Set an application name for the disk"
-    echo "                        Default: '${iso_application}'"
-    echo "    -D <install_dir>   Set an install_dir (directory inside iso)"
-    echo "                        Default: ${install_dir}"
-    echo "    -w <work_dir>      Set the working directory"
-    echo "                        Default: ${work_dir}"
-    echo "    -o <out_dir>       Set the output directory"
-    echo "                        Default: ${out_dir}"
-    echo "    -v                 Enable verbose output"
-    echo "    -h                 This help message"
-    exit ${1}
-}
 
 # Helper function to run make_*() only one time per architecture.
 run_once() {
@@ -1049,18 +1030,14 @@ make_prepare() {
 
 # Build ISO
 make_iso() {
-    mkarchiso ${verbose} -w "${work_dir}" -D "${install_dir}" -L "${iso_label}" -P "${iso_publisher}" -A "${iso_application}" -o "${out_dir}" iso "${iso_name}-${iso_version}-x86_64.iso"
+    mkarchiso ${verbose} -w "${work_dir}" -D "${install_dir}" -L "${iso_label}" -P "${iso_publisher}" -A "${iso_application}" -o "${out_dir}" iso "$image_file_name"
 }
 
-if [[ ${EUID} -ne 0 ]]; then
-    echo "This script must be run as root."
-    _usage 1
-fi
 
+<<DISABLED
 while getopts 'N:V:L:P:A:D:w:o:g:vh' arg; do
     case "${arg}" in
         N) iso_name="${OPTARG}" ;;
-        V) iso_version="${OPTARG}" ;;
         L) iso_label="${OPTARG}" ;;
         P) iso_publisher="${OPTARG}" ;;
         A) iso_application="${OPTARG}" ;;
@@ -1076,6 +1053,7 @@ while getopts 'N:V:L:P:A:D:w:o:g:vh' arg; do
            ;;
     esac
 done
+DISABLED
 
 mkdir -p ${work_dir}
 
@@ -1095,7 +1073,7 @@ run_once make_iso
 
 set +e +u
 #--------------------------------------------------------------#
-#COMMENT
+
 
 cd - > /dev/null
 if [[ ! $? = 0 ]]; then
