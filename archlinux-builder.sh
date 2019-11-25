@@ -659,7 +659,7 @@ elif [[  -n $(printf "$archiso_configs_git" | grep -Eo "http(s?)://(\w|:|%|#|\$|
         red_log $error_git_clone
         exit_error
     fi
-    cp -r  $archiso_configs $working_directory
+    cp -r  $archiso_configs/* $working_directory
 else
     red_log $error_confg_not_found
     if [[ $archiso_configs = "/usr/share/archiso/configs/releng/" ]]; then
