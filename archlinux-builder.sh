@@ -171,6 +171,12 @@ function settings () {
     ## 設定ファイル生成モード
     # 0=有効 1=無効 それ以外=無効
     no_build=
+
+    ## MirrorServerの国
+    # 設定できる国は https://www.archlinux.org/mirrorlist/ の一覧を確認してください
+    # 設定できる値は ISO 3166-1 alpha-2 に基づいた2文字のコードを使用してください
+    # すべての国の場合はallを指定してください
+    mirror=
 }
 
 
@@ -517,6 +523,12 @@ fi
 if [[ ! $(user_check $user ) = 0 ]]; then
     red_log $error_user
     exit_error
+fi
+
+
+# Mirrorチェック
+if [[ -z $mirror ]]; then
+    mirror=all
 fi
 
 
@@ -899,7 +911,7 @@ else
 
         cp ${script_path}/pacman.conf ${work_dir}/x86_64/airootfs/etc
 
-        curl -o ${work_dir}/x86_64/airootfs/etc/pacman.d/mirrorlist 'https://www.archlinux.org/mirrorlist/?country=all&protocol=http&use_mirror_status=on'
+        curl -o ${work_dir}/x86_64/airootfs/etc/pacman.d/mirrorlist "https://www.archlinux.org/mirrorlist/?country=${mirror}&protocol=http&use_mirror_status=on"
 
         lynx -dump -nolist 'https://wiki.archlinux.org/index.php/Installation_Guide?action=render' >> ${work_dir}/x86_64/airootfs/root/install.txt
 
