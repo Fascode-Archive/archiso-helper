@@ -164,9 +164,13 @@ function settings () {
     # デバッグ用です。 0=削除する 1=削除しない それ以外=削除する
     delete_working_dir=
 
-    # ビルドスクリプト
+    ## ビルドスクリプト
     # カスタマイズしたbuild.shを使用する場合はこの設定を使用してください
     custom_build_script=
+
+    ## 設定ファイル生成モード
+    # 0=有効 1=無効 それ以外=無効
+    no_build=
 }
 
 
@@ -802,6 +806,14 @@ done
 
 
 ## ISO作成
+if [[ $no_build = 0 ]]; then
+    ## ダウンロードしたメッセージファイルを削除
+    if [[ $msg_dl = 0 ]]; then
+        rm $message_file_path
+    fi
+    mv $working_directory $(dirname $image_file_path)
+    exit 0
+fi
 blue_log $log_start_build
 cd $working_directory
 #$working_directory/build.sh -v
