@@ -1,5 +1,3 @@
-#!/usr/bin/env bash
-
 function settings () {
 
     ###############################################
@@ -18,16 +16,16 @@ function settings () {
     working_directory="/tmp/archiso"
 
 
-    ## 生成したいアーキテクチャ
-    # i686 or x86_64）を入力してください（i686は非公式リポジトリを使用します。
-    make_arch=x86_64
-
-
-    ## 作成後のイメージファイルのパス
-    # フルパスで表記してください。それぞれ${yaer}、${month}、${day}で年、月、日に置き換えることができます。
+    ## 作成後のイメージファイルの名前
+    # それぞれ${yaer}、${month}、${day}で年、月、日に置き換えることができます。
     # ${make_arch}で生成するアーキテクチャに置き換えることができます。
     # ここの値が不正な場合、失敗するか作業ディレクトリ/outに作成されます。
-    image_file_path="/home/archlinux-${year}.${month}.${day}-${make_arch}.iso"
+    image_file_name="archlinux-${year}.${month}.${day}-${make_arch}.iso"
+
+
+    # 保存先のディレクトリ
+    # イメージファイルを保存するディレクトリです。
+    image_file_dir="/home"
 
 
     ## 追加する公式リポジトリのパッケージ
@@ -156,4 +154,12 @@ function settings () {
     ## 作業ディレクトリを終了時に削除するかどうか
     # デバッグ用です。 0=削除する 1=削除しない それ以外=削除する
     delete_working_dir=
+
+    ## ビルドスクリプト
+    # カスタマイズしたbuild.shを使用する場合はこの設定を使用してください
+    custom_build_script=
+
+    ## 設定ファイル生成モード
+    # 0=有効 1=無効 それ以外=無効
+    no_build=
 }
