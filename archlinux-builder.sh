@@ -337,7 +337,7 @@ fi
 number_of_pkg=${#add_pkg[*]}
 number_add_pkg_aur=${#add_pkg_aur[*]}
 build_aur_script_path=$working_directory/aur.bash
-make_arch=x86_64
+make_arch=$(uname -m)
 image_file_path=$image_file_dir/$image_file_name
 
 
@@ -806,7 +806,7 @@ blue_log $log_start_build
 cd $working_directory
 #$working_directory/build.sh -v
 
-if [[ -n $custom_build_script && -f $custom_build_script ]]; then
+if [[ -n $custom_build_script && -f $custom_build_script || ! $make_arch = "x86_64" ]]; then
     $custom_build_script -v
 else
     #--------------------------------------------------------------#
