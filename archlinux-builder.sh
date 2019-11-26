@@ -817,22 +817,8 @@ for (( i=0; i<number_add_pkg_aur ; i++ )); do
 done
 
 
-## ISO作成
-if [[ $no_build = 0 ]]; then
-    ## ダウンロードしたメッセージファイルを削除
-    if [[ $msg_dl = 0 ]]; then
-        rm $message_file_path
-    fi
-    mv $working_directory $(dirname $image_file_path)
-    exit 0
-fi
-blue_log $log_start_build
-cd $working_directory
-#$working_directory/build.sh -v
-
-if [[ -n $custom_build_script && -f $custom_build_script || ! $make_arch = "x86_64" ]]; then
-    $custom_build_script -v
-else
+## build関数
+function build () {
     #--------------------------------------------------------------#
     # enable build
     verbose="-v"
@@ -1055,8 +1041,48 @@ else
 
     set +e +u
     #--------------------------------------------------------------#
+}
+if [[ -n $custom_build_script && -f $custom_build_script ]]; then
+    function build () {
+        $custom_build_script -v
+    }
+elif [[ ! $make_arch = "x86_64"]]; then
+    function build () {
+        $working_directory/build.sh -v
+    }
+elif [[ -f $working_directory/build.sh ]]; then
+    if [[ -n $query ]];  then
+        yn=$query
+    else
+        echo  "プロファイルのbuild.shが見つかりました。プロファイルのbuild.shを使用しますか?（y/N）"
+        printf "プロファイルのbuild.shを使用しない場合は 内臓のビルドスクリプト（x86_64のみ）が使用されます。: "
+        read yn
+    fi
+
+    case $yn in
+        y ) function build () { $working_directory/build.sh; } ;;
+        Y ) function build () { $working_directory/build.sh; } ;;
+        Yes ) function build () { $working_directory/build.sh; } ;;
+        yes ) function build () { $working_directory/build.sh; } ;;
+        * ) : ;;
+    esac
+    unset yn
 fi
 
+
+## ビルド開始
+if [[ $no_build = 0 ]]; then
+    ## ダウンロードしたメッセージファイルを削除
+    if [[ $msg_dl = 0 ]]; then
+        rm $message_file_path
+    fi
+    mv $working_directory $(dirname $image_file_path)
+    exit 0
+fi
+blue_log $log_start_build
+cd $working_directory
+
+build
 
 cd - > /dev/null
 if [[ ! $? = 0 ]]; then
