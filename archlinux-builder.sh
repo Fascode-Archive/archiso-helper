@@ -1052,11 +1052,7 @@ mv $working_directory/out/* $image_file_path
 
 ## MD5
 if [[ $create_md5 = 0 ]]; then
-    if [[ $(package_check md5; printf $?) = 1 ]]; then
-        yellow_log $error_pkg_md5
-        install_aur md5
-    fi
-    md5 $image_file_path  > $image_file_path.md5
+    md5sum $image_file_path  > $image_file_path.md5
 fi
 
 
