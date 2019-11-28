@@ -32,9 +32,17 @@ function settings () {
     image_file_name="archlinux-${year}.${month}.${day}-${make_arch}.iso"
 
 
-    # 保存先のディレクトリ
+    ## 保存先のディレクトリ
     # イメージファイルを保存するディレクトリです。
     image_file_dir="/home"
+
+
+    ## イメージファイルのラベル
+    iso_label="ARCH_$(date +%Y%m)"
+
+
+    ## イメージファイルの作成者
+    iso_publisher="Arch Linux <http://www.archlinux.org>"
 
 
     ## 追加する公式リポジトリのパッケージ
@@ -819,17 +827,25 @@ done
 
 ## build関数
 function build () {
-    #--------------------------------------------------------------#
     # enable build
     verbose="-v"
+
+    if [[ -z $iso_label ]]; then
+        iso_label="ARCH_$(date +%Y%m%d)"
+    fi
+    if [[ -z $iso_publisher ]]; then
+        iso_publisher="Arch Linux <http://www.archlinux.org>"
+    fi
+        
+    #--------------------------------------------------------------#
     # build.sh
 
 
     set -e -u
 
     iso_name=archlinux
-    iso_label="ARCH_$(date +%Y%m%d)"
-    iso_publisher="Arch Linux <http://www.archlinux.org>"
+    #iso_label="ARCH_$(date +%Y%m%d)"
+    #iso_publisher="Arch Linux <http://www.archlinux.org>"
     iso_application="Arch Linux Live/Rescue CD"
     install_dir=arch
     work_dir=$working_directory/work
