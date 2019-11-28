@@ -463,7 +463,7 @@ fi
 ## ディストリビューションチェック
 if [[ -f /etc/os-release ]]; then
     source /etc/os-release
-    if [[ ! $ID = "arch" ]]; then
+    if [[ ! $ID = "arch" || ! $ID = "arch32" ]]; then
         red_log $error_archlinux
         exit_error
     fi
