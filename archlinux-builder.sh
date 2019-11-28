@@ -1019,7 +1019,7 @@ function build () {
 
     # Build ISO
     make_iso() {
-        mkarchiso ${verbose} -w "${work_dir}" -D "${install_dir}" -L "${iso_label}" -P "${iso_publisher}" -A "${iso_application}" -o "${out_dir}" iso "$image_file_name"
+        mkarchiso ${verbose} -w "${work_dir}" -D "${install_dir}" -L "${iso_label}" -P "${iso_publisher}" -A "${iso_application}" -o "${out_dir}" iso "$image_file_name" -c "gzip"
     }
 
 
