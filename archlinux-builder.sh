@@ -185,6 +185,9 @@ function settings () {
     # 設定できる値は ISO 3166-1 alpha-2 に基づいた2文字のコードを使用してください
     # すべての国の場合はallを指定してください
     mirror=
+
+    ## chrootで追加で実行するコマンド
+    chroot_add_command=
 }
 
 
@@ -710,6 +713,12 @@ if [[ -n $customize_airootfs_path ]]; then
         exit_error
     fi
     cp -i $customize_airootfs_path $working_directory/airootfs/root/customize_airootfs.sh
+fi
+
+
+## 追加実行コマンド
+if [[ -n $chroot_add_command ]]; then
+    echo $chroot_add_command >> $working_directory/airootfs/root/customize_airootfs.sh
 fi
 
 
