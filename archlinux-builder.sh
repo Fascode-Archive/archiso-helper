@@ -1046,7 +1046,7 @@ if [[ -n $custom_build_script && -f $custom_build_script ]]; then
     function build () {
         $custom_build_script -v
     }
-elif [[ ! $make_arch = "x86_64"]]; then
+elif [[ ! $make_arch = "x86_64" ]]; then
     function build () {
         $working_directory/build.sh -v
     }
