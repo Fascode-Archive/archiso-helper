@@ -1,3 +1,17 @@
+#!/usr/bin/env bash
+
+# Settings
+out=/tmp/mkinitcpio-jp-bar.patch
+
+
+# check root
+if [[ ! $UID = 0 ]]; then
+    echo "Please run as root." >&2
+    exit 1
+fi
+
+# export path to $out
+cat >> $out << EOF
 --- /usr/bin/mkarchiso	2019-10-16 15:23:14.000000000 +0000
 +++ /usr/bin/mkarchiso	2019-11-24 22:41:30.594047717 +0000
 @@ -2,7 +2,7 @@
@@ -36,3 +50,36 @@
      fi
      _msg_info "Done!"
  }
+EOF
+
+
+# functions
+function install () {
+    patch < $out
+}
+
+function uninstall () {
+    patch -R -u < $out
+}
+
+function usage () {
+    echo "mkarchiso Japanese and progress bar patch."
+    echo
+    echo "Yamada Hayao <shun819.mail@gmail.com>"
+    echo "Twitter : @Hayao0819"
+    echo
+    echo "How to use the patch script."
+    echo
+    echo "   -i   Apply the patch."
+    echo "   -u   The applied patch is returned to the state before application."
+    echo "   -h   Displays this help."
+}
+
+# option 
+while getopts 'i:u:n' arg; do
+    case "${arg}" in
+        i) install ;;
+        u) uninstall ;;
+        *) usage ;;
+    esac
+done
