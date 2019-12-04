@@ -691,7 +691,14 @@ if [[ -n $grub_background ]]; then
         red_log $error_grub_background
         exit_error
     fi
-    cp $grub_background $working_directory/syslinux/splash.png
+    image_size_w=$(identify -format '%w' $grub_background)
+    image_size_h=$(identify -format '%h' $grub_background)
+    if [[ $image_size_w = "640" && $image_size_h = "480" ]]; then
+        cp $grub_background $working_directory/syslinux/splash.png
+    else
+        red_log "画像サイズは640x480のみ有効です。"
+        exit_error
+    fi
 fi
 
 
