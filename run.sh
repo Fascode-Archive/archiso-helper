@@ -22,3 +22,6 @@ run $script_dir/check-root.sh
 
 # ディストリビューションチェック
 run $script_dir/check-os.sh
+
+## 作業ディレクトリチェック
+run $script_dir/check-work-dir.sh
