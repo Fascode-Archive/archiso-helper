@@ -35,3 +35,5 @@ run $script_dir/check-image.sh
 # ユーザーチェック
 run $script_dir/check-user.sh
 
+# Mirrorチェック
+run $script_dir/check-mirror.sh
