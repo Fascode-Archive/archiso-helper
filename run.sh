@@ -31,3 +31,7 @@ run $script_dir/check-git-dir.sh
 
 # 出力先チェック
 run $script_dir/check-image.sh
+
+# ユーザーチェック
+run $script_dir/check-user.sh
+
