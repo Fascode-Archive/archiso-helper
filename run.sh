@@ -37,3 +37,7 @@ run $script_dir/check-user.sh
 
 # Mirrorチェック
 run $script_dir/check-mirror.sh
+
+# デバッグ変数の表示
+run $script_dir/show-debug.sh
+
