@@ -25,3 +25,6 @@ run $script_dir/check-os.sh
 
 ## 作業ディレクトリチェック
 run $script_dir/check-work-dir.sh
+
+## Gitクローンディレクトリチェック
+run $script_dir/check-git-dir.sh
