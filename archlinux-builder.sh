@@ -1110,6 +1110,7 @@ fi
 blue_log $log_start_build
 cd $working_directory
 
+chmod +x $build_script
 bash $build_script
 
 cd - > /dev/null
