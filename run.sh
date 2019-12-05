@@ -49,3 +49,7 @@ run $script_dir/make-work-dir.sh
 
 # プロファイルコピー
 run $script_dir/copy-profiles.sh
+
+# Grub背景の置き換え
+run $script_dir/change-grub.sh
+
