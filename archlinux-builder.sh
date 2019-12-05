@@ -1075,13 +1075,9 @@ function build () {
     #--------------------------------------------------------------#
 }
 if [[ -n $custom_build_script && -f $custom_build_script ]]; then
-    function build () {
-        $custom_build_script -v
-    }
+    build_script=$custom_build_script
 elif [[ ! $make_arch = "x86_64" ]]; then
-    function build () {
-        $working_directory/build.sh -v
-    }
+    build_script="$working_directory/build.sh"
 elif [[ -f $working_directory/build.sh ]]; then
     if [[ -n $query ]];  then
         yn=$query
@@ -1092,10 +1088,10 @@ elif [[ -f $working_directory/build.sh ]]; then
     fi
 
     case $yn in
-        y ) function build () { $working_directory/build.sh; } ;;
-        Y ) function build () { $working_directory/build.sh; } ;;
-        Yes ) function build () { $working_directory/build.sh; } ;;
-        yes ) function build () { $working_directory/build.sh; } ;;
+        y ) build_script="$working_directory/build.sh" ;;
+        Y ) build_script="$working_directory/build.sh" ;;
+        Yes ) build_script="$working_directory/build.sh" ;;
+        yes ) build_script="$working_directory/build.sh" } ;;
         * ) : ;;
     esac
     unset yn
@@ -1114,7 +1110,7 @@ fi
 blue_log $log_start_build
 cd $working_directory
 
-build
+bash $build_script
 
 cd - > /dev/null
 if [[ ! $? = 0 ]]; then
