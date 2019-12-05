@@ -41,3 +41,5 @@ run $script_dir/check-mirror.sh
 # デバッグ変数の表示
 run $script_dir/show-debug.sh
 
+# ArchISOインストール、アップグレード
+run $script_dir/install-archiso.sh
