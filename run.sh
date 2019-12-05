@@ -46,3 +46,6 @@ run $script_dir/install-archiso.sh
 
 # 作業ディレクトリ作成
 run $script_dir/make-work-dir.sh
+
+# プロファイルコピー
+run $script_dir/copy-profiles.sh
