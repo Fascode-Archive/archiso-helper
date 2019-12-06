@@ -56,6 +56,22 @@ function white_log () {
     return 0
 }
 
+function ask () {
+    if [[ -z $@ ]]; then
+        echo
+    else
+        if [[ ! $log = 1 ]]; then
+            if [[ $msg_language = "ja" ]]; then
+                echo -en "\033[0;33m$@ : \033[0;39m"
+            else
+                echo -en "\033[1;33m$(trans -b -p ja:$msg_language "$@") : \033[0;39m"
+            fi
+        fi
+    fi
+    return 0
+}
+}
+
 # パッケージがインストールされているか（終了コード0ならインストールされている、1ならされていない）
 function package_check () {
     if [[ -z $1 ]]; then
