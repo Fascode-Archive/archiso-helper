@@ -50,11 +50,7 @@ function white_log () {
         echo
     else
         if [[ ! $log = 1 ]]; then
-            if [[ $msg_language = "ja" ]]; then
-                echo -e $@
-            else
-                echo -e "$(trans -b -p ja:$msg_language $@)"
-            fi
+            echo -e $@
         fi
     fi
     return 0
