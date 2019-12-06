@@ -1,28 +1,28 @@
 #!/usr/bin/env bash
 
 if [[ -d $archiso_configs ]]; then
-    blue_log $log_copy_config_dir
+    blue_log "プロファイルを作業ディレクトリにコピーしています。"
     cp -r $archiso_configs/* $working_directory
 # Git URL判定
 elif [[  -n $(printf "$archiso_configs_git" | grep -Eo "http(s?)://(\w|:|%|#|\$|&|\?|\(|\)|~|\.|=|\+|\-|/)+")  ]]; then
     # Gitインストール
     if [[ $(package_check git; printf $?) = 1 ]]; then
-        yellow_log  $error_git_not_installed
+        yellow_log  "Gitをインストールします。"
         install_pacman git
     fi
-    blue_log $log_config_clone
+    blue_log "Gitにあるプロファイルをダウンロードしています。"
     git clone $archiso_configs_git $clone_temp
     if [[ ! $? = 0 ]]; then
-        red_log $error_git_clone
+        red_log "Gitからのダウンロードに失敗しました。"
         exit_error
     fi
     cp -r  $archiso_configs/* $working_directory
 else
-    red_log $error_confg_not_found
+    red_log "プロファイルが見つかりませんでした。"
     if [[ $archiso_configs = "/usr/share/archiso/configs/releng/" ]]; then
-        red_log $error_install_archiso
+        red_log "archisoのインストールに失敗しました。"
     else
-        red_log $error_confg_not_found
+        red_log "プロファイルが存在していません。"
     fi
     exit_error
 fi

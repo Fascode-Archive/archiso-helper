@@ -75,7 +75,7 @@ function ask () {
 # パッケージがインストールされているか（終了コード0ならインストールされている、1ならされていない）
 function package_check () {
     if [[ -z $1 ]]; then
-        red_log $error_check_pkg
+        red_log "パッケージを指定してください。"
         exit 1
     fi
     if [[ -n $( pacman -Q | grep $1 | awk '{print $1}' ) ]]; then

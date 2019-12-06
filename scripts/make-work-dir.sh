@@ -7,11 +7,11 @@ else
     if [[ -n $query ]];  then
         yn=$query
     else
-        printf "$ask_delete_working_dir"
+        ask "既存の作業ディレクトリを削除してもよろしいですか？"
         read yn
     fi
     function del () {
-        blue_log $log_delete_working_dir
+        blue_log "既存の作業ディレクトリを削除しています。"
         rm -rf $working_directory
     }
     case $yn in
