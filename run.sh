@@ -67,3 +67,6 @@ run $script_dir/copy-customize-script.sh
 
 # 追加実行コマンド
 run $script_dir/add-command.sh
+
+# AURパッケージの追加
+run $script_dir/add-aur-packages.sh
