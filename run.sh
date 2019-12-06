@@ -70,3 +70,6 @@ run $script_dir/add-command.sh
 
 # AURパッケージの追加
 run $script_dir/add-aur-packages.sh
+
+# カスタムリポジトリの追加
+run $script_dir/add-custom-repo.sh
