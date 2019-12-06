@@ -14,6 +14,9 @@ run $script_dir/start.sh
 # 設定
 run $script_dir/load-settings.sh
 
+# 言語チェック
+run $script_dir/check-lang.sh
+
 # 翻訳スクリプトのチェック
 run $script_dir/install-translate-shell.sh
 
