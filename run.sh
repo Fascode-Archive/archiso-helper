@@ -3,7 +3,7 @@
 script_dir=./scripts
 
 # 初期値読み込み
-source ./initial.sh
+source $script_dir/initial.sh
 
 # スクリプトを実行
 run () { source $@; }
