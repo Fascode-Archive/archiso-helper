@@ -55,3 +55,7 @@ run $script_dir/change-grub.sh
 
 # オーバーレイディレクトリのコピー
 run $script_dir/copy-overlay-dir.sh
+
+# customize_airootfs.shのコピー
+run $script_dir/copy-customize-script.sh
+
