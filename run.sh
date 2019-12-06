@@ -14,8 +14,8 @@ run $script_dir/start.sh
 # 設定
 run $script_dir/load-settings.sh
 
-# メッセージ読み込み
-run $script_dir/load-messages.sh
+# 翻訳スクリプトのチェック
+run $script_dir/load-translate.sh
 
 # ネット接続確認
 run $script_dir/check-network.sh
