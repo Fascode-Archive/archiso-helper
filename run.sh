@@ -65,3 +65,5 @@ run $script_dir/copy-overlay-dir.sh
 # customize_airootfs.shのコピー
 run $script_dir/copy-customize-script.sh
 
+# 追加実行コマンド
+run $script_dir/add-command.sh
