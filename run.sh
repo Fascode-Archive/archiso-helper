@@ -8,11 +8,14 @@ source ./initial.sh
 # スクリプトを実行
 run () { source $@; }
 
-## タイトル
+# タイトル
 run $script_dir/start.sh
 
-## 設定
+# 設定
 run $script_dir/load-settings.sh
+
+# メッセージ読み込み
+run $script_dir/load-messages.sh
 
 # ネット接続確認
 run $script_dir/check-network.sh
