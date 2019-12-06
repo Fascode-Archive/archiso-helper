@@ -1099,8 +1099,8 @@ elif [[ -f $working_directory/build.sh ]]; then
         y ) build_script="$working_directory/build.sh" ;;
         Y ) build_script="$working_directory/build.sh" ;;
         Yes ) build_script="$working_directory/build.sh" ;;
-        yes ) build_script="$working_directory/build.sh" } ;;
-        * ) : ;;
+        yes ) build_script="$working_directory/build.sh" ;;
+        * ) build_script="include" ;;
     esac
     unset yn
 fi
@@ -1118,8 +1118,12 @@ fi
 blue_log $log_start_build
 cd $working_directory
 
-chmod +x $build_script
-bash $build_script
+if [[ $build_script = "include" ]]; then
+    build
+else
+    chmod +x $build_script
+    bash $build_script
+fi
 
 cd - > /dev/null
 if [[ ! $? = 0 ]]; then
