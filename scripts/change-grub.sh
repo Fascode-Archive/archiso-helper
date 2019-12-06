@@ -2,7 +2,7 @@
 
 if [[ -n $grub_background ]]; then
     if [[ ! -f $grub_background ]]; then
-        red_log $error_grub_background
+        red_log "Grub背景用の画像が存在しません。"
         exit_error
     fi
     image_size_w=$(identify -format '%w' $grub_background)
