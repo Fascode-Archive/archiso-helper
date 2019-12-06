@@ -15,7 +15,7 @@ run $script_dir/start.sh
 run $script_dir/load-settings.sh
 
 # 翻訳スクリプトのチェック
-run $script_dir/load-translate.sh
+run $script_dir/install-translate-shell.sh
 
 # ネット接続確認
 run $script_dir/check-network.sh
