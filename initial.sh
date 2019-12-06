@@ -78,7 +78,7 @@ function package_check () {
         red_log $error_check_pkg
         exit 1
     fi
-    if [[ -n $( pacman -Q $1 | awk '{print $1}' ) ]]; then
+    if [[ -n $( pacman -Q | grep $1 | awk '{print $1}' ) ]]; then
         return 0
     else
         return 1

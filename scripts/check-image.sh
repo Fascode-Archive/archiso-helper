@@ -4,7 +4,7 @@ if [[ -f $image_file_path ]]; then
     if [[ -n $query ]];  then
         yn=$query
     else
-        ask "$image_file_pathは既に存在しています。上書きしてもよろしいですか？"
+        ask "既に$image_file_pathは存在しています。上書きしてもよろしいですか？"
         read yn
     fi
     function del () {
