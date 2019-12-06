@@ -6,7 +6,7 @@ function red_log () {
         if [[ $msg_language = "ja" ]]; then
             echo -e "\033[1;31m$@\033[0;39m" >&2
         else
-            echo -e "\033[1;31m$(trans -b -p ja:$msg_language $@)\033[0;39m" >&2
+            echo -e "\033[1;31m$(trans -b -p ja:$msg_language "$@")\033[0;39m" >&2
         fi
     fi
     return 0
@@ -21,7 +21,7 @@ function blue_log () {
             if [[ $msg_language = "ja" ]]; then
                 echo -e "\033[1;36m$@\033[0;39m"
             else
-                echo -e "\033[1;36m$(trans -b -p ja:$msg_language $@)\033[0;39m"
+                echo -e "\033[1;36m$(trans -b -p ja:$msg_language "$@")\033[0;39m"
             fi
         fi
     fi
@@ -37,7 +37,7 @@ function yellow_log () {
             if [[ $msg_language = "ja" ]]; then
                 echo -e "\033[0;33m$@\033[0;39m" >&2
             else
-                echo -e "\033[1;33m$(trans -b -p ja:$msg_language $@)\033[0;39m"
+                echo -e "\033[1;33m$(trans -b -p ja:$msg_language "$@")\033[0;39m"
             fi
         fi
     fi
