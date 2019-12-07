@@ -70,7 +70,6 @@ function ask () {
     fi
     return 0
 }
-}
 
 # パッケージがインストールされているか（終了コード0ならインストールされている、1ならされていない）
 function package_check () {
