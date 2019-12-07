@@ -1,7 +1,8 @@
 #!/usr/bin/env bash
 
-if [[ -n $(cat ./lang-list | grep -w $msg_language ) ]]; then
+if [[ -z $(cat ./lang-list | grep -w $msg_language ) ]]; then
+    msg_language_bak=$msg_language
     msg_language=en
-    red_log "設定された言語は現在使用できません。"
+    red_log "$msg_language_bak is currently unavailable."
     exit_error
 fi
