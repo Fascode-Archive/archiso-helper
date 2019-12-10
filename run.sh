@@ -85,3 +85,6 @@ run $script_dir/set-build-script.sh
 
 # ビルドスクリプト設定を元にビルド開始
 run $script_dir/start-build.sh
+
+# イメージファイル移動
+run $script_dir/move-image.sh
