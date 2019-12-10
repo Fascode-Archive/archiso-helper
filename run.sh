@@ -69,7 +69,7 @@ run $script_dir/copy-customize-script.sh
 run $script_dir/add-command.sh
 
 # AURパッケージの追加
-run $script_dir/add-aur-packages.sh
+run $script_dir/add-aur-to-repo.sh
 
 # カスタムリポジトリの追加
 run $script_dir/add-custom-repo.sh
