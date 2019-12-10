@@ -79,3 +79,9 @@ run $script_dir/add-unofficial-repo.sh
 
 # パッケージの追記
 run $script_dir/add-pkg.sh
+
+# ビルドスクリプト設定
+run $script_dir/set-build-script.sh
+
+# ビルドスクリプト設定を元にビルド開始
+run $script_dir/start-build.sh
