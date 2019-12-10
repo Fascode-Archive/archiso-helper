@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-export script_dir=$current_scriput_dir/scripts
+export script_dir=$(pwd)/scripts
 
 # 初期値読み込み
 source $script_dir/initial.sh
