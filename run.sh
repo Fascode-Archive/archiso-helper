@@ -88,3 +88,6 @@ run $script_dir/start-build.sh
 
 # イメージファイル移動
 run $script_dir/move-image.sh
+
+# MD5チェックサムを作成
+run $script_dir/create-md5.sh
