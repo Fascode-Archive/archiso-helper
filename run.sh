@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-script_dir=./scripts
+export script_dir=$(pwd)/scripts
 
 # 初期値読み込み
 source $script_dir/initial.sh
@@ -13,6 +13,9 @@ run $script_dir/start.sh
 
 # 設定
 run $script_dir/load-settings.sh
+
+# シェル変数をグローバル変数へ
+run $script_dir/export-settings.sh
 
 # 言語チェック
 run $script_dir/check-lang.sh
@@ -69,7 +72,25 @@ run $script_dir/copy-customize-script.sh
 run $script_dir/add-command.sh
 
 # AURパッケージの追加
-run $script_dir/add-aur-packages.sh
+run $script_dir/add-aur-to-repo.sh
 
 # カスタムリポジトリの追加
 run $script_dir/add-custom-repo.sh
+
+# 非公式リポジトリの追加
+run $script_dir/add-unofficial-repo.sh
+
+# パッケージの追記
+run $script_dir/add-pkg.sh
+
+# ビルドスクリプト設定
+run $script_dir/set-build-script.sh
+
+# ビルドスクリプト設定を元にビルド開始
+run $script_dir/start-build.sh
+
+# イメージファイル移動
+run $script_dir/move-image.sh
+
+# MD5チェックサムを作成
+run $script_dir/create-md5.sh
