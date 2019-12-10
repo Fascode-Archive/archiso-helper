@@ -26,5 +26,4 @@ fi
 number_of_pkg=${#add_pkg[*]}
 number_add_pkg_aur=${#add_pkg_aur[*]}
 build_aur_script_path=$working_directory/aur.bash
-make_arch=$(uname -m)
 image_file_path=$image_file_dir/$image_file_name
