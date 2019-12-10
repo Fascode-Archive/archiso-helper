@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 # archiso-builder
 ArchISOの補助を行います。デフォルト設定で最新のLiveCDをビルドすることもできます。  
 ~~（もともとは最新のCDをビルドするためだったんだが...）~~  
@@ -112,3 +113,11 @@ sudo patch -R -u < mkarchiso-jp-bar.patch
 設定はスクリプト内に細かく書かれています。  
 
 
+=======
+# 概要
+[archiso-helper](https://github.com/Hayao0819/archiso-helper)の後継スクリプト。  
+ディレクトリ構造を変更し、全体を見直しています。
+
+# 翻訳
+[translate-shell](https://github.com/soimort/translate-shell/)を使用しています。
+>>>>>>> B_master
