@@ -73,3 +73,6 @@ run $script_dir/add-aur-packages.sh
 
 # カスタムリポジトリの追加
 run $script_dir/add-custom-repo.sh
+
+## 非公式リポジトリの追加
+run $script_dir/add-unofficial-repo.sh
