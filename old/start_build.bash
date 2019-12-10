@@ -41,3 +41,7 @@ fi
 ## 権限付与と実行
 chmod 775 /tmp/archlinux-builder.sh
 sudo /tmp/archlinux-builder.sh /tmp/settings.bash
+
+## ファイルを削除
+rm /tmp/archlinux-builder.sh
+rm /tmp/settings.bash

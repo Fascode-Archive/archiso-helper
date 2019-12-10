@@ -252,8 +252,9 @@ function install_pacman () {
     pacman -S --noconfirm $@
 }
 
-# エラーによる終了時の処理
-function exit_error () {
+
+# 余分なファイルを削除
+cleanup () {
     if [[ -d $working_directory && ! $delete_working_dir = 1 ]]; then
         rm -rf $working_directory
     fi
@@ -263,6 +264,13 @@ function exit_error () {
     if [[ $auto_make_customrepo = 0 && -d $customrepo_directory ]]; then
         rm -r $customrepo_directory
     fi
+    if [[ -n $(printf "$archiso_configs_git" | grep -Eo "http(s?)://(\w|:|%|#|\$|&|\?|\(|\)|~|\.|=|\+|\-|/)+") && -d $clone_temp ]]; then
+        rm -rf $clone_temp
+    fi
+}
+# エラーによる終了時の処理
+function exit_error () {
+    cleanup
     exit 1
 }
 
@@ -669,7 +677,7 @@ elif [[  -n $(printf "$archiso_configs_git" | grep -Eo "http(s?)://(\w|:|%|#|\$|
         red_log $error_git_clone
         exit_error
     fi
-    cp -r  $archiso_configs $working_directory
+    cp -r  $archiso_configs/* $working_directory
 else
     red_log $error_confg_not_found
     if [[ $archiso_configs = "/usr/share/archiso/configs/releng/" ]]; then
@@ -1160,7 +1168,9 @@ if [[ -d $working_directory && ! $delete_working_dir = 1 ]]; then
     blue_log $log_delete_working_dir
     rm -rf $working_directory
 else
-    red_log $error_working_dir_not_found
+    if [[ ! -d $working_directory ]]; then
+        red_log $error_working_dir_not_found
+    fi
 fi
 
 
