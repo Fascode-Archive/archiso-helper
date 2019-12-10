@@ -11,8 +11,12 @@ fi
 blue_log $log_start_build
 cd $working_directory
 
-chmod +x $build_script
-bash $build_script
+if [[ $build_script = "include" ]]; then
+    build
+else
+    chmod +x $build_script
+    bash $build_script
+fi
 
 cd - > /dev/null
 if [[ ! $? = 0 ]]; then

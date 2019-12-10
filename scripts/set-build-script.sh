@@ -31,8 +31,8 @@ elif [[ -f $working_directory/build.sh ]]; then
         y ) build_script="$working_directory/build.sh" ;;
         Y ) build_script="$working_directory/build.sh" ;;
         Yes ) build_script="$working_directory/build.sh" ;;
-        yes ) build_script="$working_directory/build.sh" } ;;
-        * ) : ;;
+        yes ) build_script="$working_directory/build.sh" ;;
+        * ) build_script="include" ;;
     esac
     unset yn
 fi
