@@ -8,7 +8,7 @@ if [[ $no_build = 0 ]]; then
     mv $working_directory $(dirname $image_file_path)
     exit 0
 fi
-blue_log $log_start_build
+blue_log "ビルドを開始します。"
 cd $working_directory
 
 if [[ $build_script = "include" ]]; then
