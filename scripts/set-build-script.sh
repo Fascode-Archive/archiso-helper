@@ -2,22 +2,22 @@
 
 function build () {
     # enable build
-    verbose="-v"
+    export verbose="-v"
 
     if [[ -z $iso_label ]]; then
-        iso_label="ARCH_$(date +%Y%m%d)"
+        export iso_label="ARCH_$(date +%Y%m%d)"
     fi
     if [[ -z $iso_publisher ]]; then
-        iso_publisher="Arch Linux <http://www.archlinux.org>"
+        export iso_publisher="Arch Linux <http://www.archlinux.org>"
     fi
         
     # build.sh
     run $script_dir/archiso-build.sh
 }
 if [[ -n $custom_build_script && -f $custom_build_script ]]; then
-    build_script=$custom_build_script
+    export build_script=$custom_build_script
 elif [[ ! $make_arch = "x86_64" ]]; then
-    build_script="$working_directory/build.sh"
+    export build_script="$working_directory/build.sh"
 elif [[ -f $working_directory/build.sh ]]; then
     if [[ -n $query ]];  then
         yn=$query
@@ -28,11 +28,11 @@ elif [[ -f $working_directory/build.sh ]]; then
     fi
 
     case $yn in
-        y ) build_script="$working_directory/build.sh" ;;
-        Y ) build_script="$working_directory/build.sh" ;;
-        Yes ) build_script="$working_directory/build.sh" ;;
-        yes ) build_script="$working_directory/build.sh" ;;
-        * ) build_script="include" ;;
+        y ) export build_script="$working_directory/build.sh" ;;
+        Y ) export build_script="$working_directory/build.sh" ;;
+        Yes ) export build_script="$working_directory/build.sh" ;;
+        yes ) export build_script="$working_directory/build.sh" ;;
+        * ) export build_script="include" ;;
     esac
     unset yn
 fi
