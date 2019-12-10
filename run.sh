@@ -14,6 +14,9 @@ run $script_dir/start.sh
 # 設定
 run $script_dir/load-settings.sh
 
+# シェル変数をグローバル変数へ
+run $script_dir/export-settings.sh
+
 # 言語チェック
 run $script_dir/check-lang.sh
 
