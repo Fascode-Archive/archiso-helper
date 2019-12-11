@@ -6,6 +6,7 @@ iso_name=archlinux
 #iso_label="ARCH_$(date +%Y%m%d)"
 #iso_publisher="Arch Linux <http://www.archlinux.org>"
 iso_application="Arch Linux Live/Rescue CD"
+iso_version=$(date +%Y.%m.%d)
 install_dir=arch
 work_dir=$working_directory/work
 gpg_key=
@@ -56,12 +57,12 @@ make_setup_mkinitcpio() {
     cp ${script_path}/mkinitcpio.conf ${work_dir}/x86_64/airootfs/etc/mkinitcpio-archiso.conf
     gnupg_fd=
     if [[ ${gpg_key} ]]; then
-    gpg --export ${gpg_key} >${work_dir}/gpgkey
-    exec 17<>${work_dir}/gpgkey
+      gpg --export ${gpg_key} >${work_dir}/gpgkey
+      exec 17<>${work_dir}/gpgkey
     fi
     ARCHISO_GNUPG_FD=${gpg_key:+17} mkarchiso ${verbose} -w "${work_dir}/x86_64" -C "${work_dir}/pacman.conf" -D "${install_dir}" -r 'mkinitcpio -c /etc/mkinitcpio-archiso.conf -k /boot/vmlinuz-linux -g /boot/archiso.img' run
     if [[ ${gpg_key} ]]; then
-    exec 17<&-
+      exec 17<&-
     fi
 }
 
@@ -102,7 +103,7 @@ make_syslinux() {
     mkdir -p ${work_dir}/iso/${install_dir}/boot/syslinux
     for _cfg in ${script_path}/syslinux/*.cfg; do
         sed "s|%ARCHISO_LABEL%|${iso_label}|g;
-            s|%INSTALL_DIR%|${install_dir}|g" ${_cfg} > ${work_dir}/iso/${install_dir}/boot/syslinux/${_cfg##*/}
+             s|%INSTALL_DIR%|${install_dir}|g" ${_cfg} > ${work_dir}/iso/${install_dir}/boot/syslinux/${_cfg##*/}
     done
     cp ${script_path}/syslinux/splash.png ${work_dir}/iso/${install_dir}/boot/syslinux
     cp ${work_dir}/x86_64/airootfs/usr/lib/syslinux/bios/*.c32 ${work_dir}/iso/${install_dir}/boot/syslinux
@@ -136,7 +137,7 @@ make_efi() {
     cp ${script_path}/efiboot/loader/entries/uefi-shell-v1-x86_64.conf ${work_dir}/iso/loader/entries/
 
     sed "s|%ARCHISO_LABEL%|${iso_label}|g;
-        s|%INSTALL_DIR%|${install_dir}|g" \
+         s|%INSTALL_DIR%|${install_dir}|g" \
         ${script_path}/efiboot/loader/entries/archiso-x86_64-usb.conf > ${work_dir}/iso/loader/entries/archiso-x86_64.conf
 
     # EFI Shell 2.0 for UEFI 2.3+
@@ -173,7 +174,7 @@ make_efiboot() {
     cp ${script_path}/efiboot/loader/entries/uefi-shell-v1-x86_64.conf ${work_dir}/efiboot/loader/entries/
 
     sed "s|%ARCHISO_LABEL%|${iso_label}|g;
-        s|%INSTALL_DIR%|${install_dir}|g" \
+         s|%INSTALL_DIR%|${install_dir}|g" \
         ${script_path}/efiboot/loader/entries/archiso-x86_64-cd.conf > ${work_dir}/efiboot/loader/entries/archiso-x86_64.conf
 
     cp ${work_dir}/iso/EFI/shellx64_v2.efi ${work_dir}/efiboot/EFI/
