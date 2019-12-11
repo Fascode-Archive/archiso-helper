@@ -12,7 +12,7 @@ run () { source $@; }
 run $script_dir/start.sh
 
 # 設定
-run $script_dir/load-settings.sh
+run $script_dir/load-settings.sh $1
 
 # シェル変数をグローバル変数へ
 run $script_dir/export-settings.sh
