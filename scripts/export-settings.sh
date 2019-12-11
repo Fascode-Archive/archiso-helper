@@ -10,7 +10,7 @@ export make_arch=$make_arch
 
 
 ## 設定
-export msg_language=$msg_language
+export lang=$lang
 export working_directory=$working_directory
 export out_name=$out_name
 export out_dir=$out_dir
