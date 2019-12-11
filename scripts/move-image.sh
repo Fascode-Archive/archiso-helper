@@ -6,4 +6,4 @@ if [[ -z $( ls $working_directory/out ) ]]; then
     red_log $error_run_again
     exit_error
 fi
-mv $working_directory/out/* $image_file_path
+mv $working_directory/out/* $out_path

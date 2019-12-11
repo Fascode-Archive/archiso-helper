@@ -51,4 +51,4 @@ export chroot_add_command=$chroot_add_command
 export number_of_pkg=$number_of_pkg
 export number_add_pkg_aur=$number_add_pkg_aur
 export build_aur_script_path=$build_aur_script_path
-export image_file_path=$image_file_path
+export out_path=$out_path

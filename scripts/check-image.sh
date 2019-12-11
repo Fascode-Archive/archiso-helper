@@ -1,14 +1,14 @@
 #!/usr/bin/env bash
 
-if [[ -f $image_file_path ]]; then
+if [[ -f $out_path ]]; then
     if [[ -n $query ]];  then
         yn=$query
     else
-        ask "既に$image_file_pathは存在しています。上書きしてもよろしいですか？"
+        ask "既に$out_pathは存在しています。上書きしてもよろしいですか？"
         read yn
     fi
     function del () {
-        rm $image_file_path
+        rm $out_path
     }
     case $yn in
         y ) del ;;

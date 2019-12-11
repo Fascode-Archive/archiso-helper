@@ -43,4 +43,4 @@ fi
 number_of_pkg=${#add_pkg[*]}
 number_add_pkg_aur=${#add_pkg_aur[*]}
 build_aur_script_path=$working_directory/aur.bash
-image_file_path=$out_dir/$out_name
+out_path=$out_dir/$out_name
