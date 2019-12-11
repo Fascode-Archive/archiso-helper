@@ -12,7 +12,7 @@ export make_arch=$make_arch
 ## 設定
 export msg_language=$msg_language
 export working_directory=$working_directory
-export image_file_name=$image_file_name
+export out_name=$out_name
 export image_file_dir=$image_file_dir
 export iso_label=$iso_label
 export iso_publisher=$iso_publisher

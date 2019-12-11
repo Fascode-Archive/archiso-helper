@@ -2,6 +2,6 @@
 
 if [[ $create_md5 = 0 ]]; then
     cd $image_file_dir
-    md5sum $image_file_path  > $image_file_name.md5
+    md5sum $image_file_path  > $out_name.md5
     cd - > /dev/null
 fi
