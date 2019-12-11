@@ -8,7 +8,6 @@ iso_name=archlinux
 iso_application="Arch Linux Live/Rescue CD"
 install_dir=arch
 work_dir=$working_directory/work
-out_dir=$image_file_dir
 gpg_key=
 
 #verbose=""
