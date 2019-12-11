@@ -16,7 +16,7 @@ function build () {
 }
 if [[ -n $custom_build_script && -f $custom_build_script ]]; then
     export build_script=$custom_build_script
-elif [[ ! $make_arch = "x86_64" ]]; then
+elif [[ ! $arch = "x86_64" ]]; then
     export build_script="$working_directory/build.sh"
 elif [[ -f $working_directory/build.sh ]]; then
     if [[ -n $query ]];  then

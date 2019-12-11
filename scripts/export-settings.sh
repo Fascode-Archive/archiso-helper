@@ -6,7 +6,7 @@ export month=$month
 export day=$day
 export current_scriput_path=$current_scriput_path
 export current_scriput_dir=$current_scriput_dir
-export make_arch=$make_arch
+export arch=$arch
 
 
 ## 設定

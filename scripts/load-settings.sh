@@ -6,7 +6,7 @@ month=$(date "+%m")
 day=$(date "+%d")
 current_scriput_path=$(cd $(dirname $0) && pwd)/$(basename $0)
 current_scriput_dir=$(pwd)
-make_arch=$(uname -m)
+arch=$(uname -m)
 
 
 ## 設定読み込み
