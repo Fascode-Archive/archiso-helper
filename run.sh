@@ -7,6 +7,7 @@ source $script_dir/initial.sh
 
 # スクリプトを実行
 run () { source $@; }
+# run () { bash $@; }
 
 # タイトル
 run $script_dir/start.sh
@@ -20,11 +21,11 @@ run $script_dir/export-settings.sh
 # 言語チェック
 run $script_dir/check-lang.sh
 
-# 翻訳スクリプトのチェック
-run $script_dir/install-translate-shell.sh
-
 # ネット接続確認
 run $script_dir/check-network.sh
+
+# 翻訳スクリプトのチェック
+run $script_dir/install-translate-shell.sh
 
 # Rootチェック
 run $script_dir/check-root.sh

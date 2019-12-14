@@ -26,7 +26,3 @@ else
     fi
     exit_error
 fi
-if [[ ! -f $working_directory/build.sh ]]; then
-    red_log "build.shがありません"
-    exit_error
-fi

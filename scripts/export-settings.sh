@@ -10,10 +10,10 @@ export make_arch=$make_arch
 
 
 ## 設定
-export msg_language=$msg_language
+export lang=$lang
 export working_directory=$working_directory
-export image_file_name=$image_file_name
-export image_file_dir=$image_file_dir
+export out_name=$out_name
+export out_dir=$out_dir
 export iso_label=$iso_label
 export iso_publisher=$iso_publisher
 export add_pkg=$add_pkg
@@ -51,4 +51,4 @@ export chroot_add_command=$chroot_add_command
 export number_of_pkg=$number_of_pkg
 export number_add_pkg_aur=$number_add_pkg_aur
 export build_aur_script_path=$build_aur_script_path
-export image_file_path=$image_file_path
+export out_path=$out_path

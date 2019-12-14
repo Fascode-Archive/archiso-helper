@@ -871,6 +871,7 @@ function build () {
     #iso_label="ARCH_$(date +%Y%m%d)"
     #iso_publisher="Arch Linux <http://www.archlinux.org>"
     iso_application="Arch Linux Live/Rescue CD"
+    iso_version=$(date +%Y.%m.%d)
     install_dir=arch
     work_dir=$working_directory/work
     out_dir=$image_file_dir
@@ -1059,7 +1060,7 @@ function build () {
 
     # Build ISO
     make_iso() {
-        mkarchiso ${verbose} -w "${work_dir}" -D "${install_dir}" -L "${iso_label}" -P "${iso_publisher}" -A "${iso_application}" -o "${out_dir}" iso "$image_file_name" -c "gzip"
+        mkarchiso ${verbose} -w "${work_dir}" -D "${install_dir}" -L "${iso_label}" -P "${iso_publisher}" -A "${iso_application}" -o "${out_dir}" iso "$out_name" -c "gzip"
     }
 
 
