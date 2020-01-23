@@ -1,6 +1,7 @@
 #!/usr/bin/env bash
 
 set -e -u
+verbose="-v"
 
 iso_name=archlinux
 #iso_label="ARCH_$(date +%Y%m%d)"
