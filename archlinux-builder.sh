@@ -1114,7 +1114,7 @@ if [[ $build_script = "include" ]]; then
     build
 else
     chmod +x $build_script
-    bash $build_script
+    bash $build_script -v
 fi
 
 cd - > /dev/null
