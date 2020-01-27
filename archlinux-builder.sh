@@ -274,7 +274,7 @@ function install_aur () {
     if [[ -f $build_aur_script_path ]]; then
         rm $build_aur_script_path
     fi
-    wget -O $build_aur_script_path https://raw.githubusercontent.com/Hayao0819/archiso-helper/master/aur.bash
+    wget -O $build_aur_script_path https://raw.githubusercontent.com/Hayao0819/archiso-helper/old/aur.bash
     # 一般ユーザーを設定
     if [[ -z $aur_user ]]; then
         ask_user () {
@@ -438,7 +438,7 @@ en () {
 ## メッセージ取得
 if [[ ! $msg_language = "en" ]]; then
     if [[ ! -f $message_file_path ]]; then
-        wget -O $message_file_path  https://raw.githubusercontent.com/Hayao0819/archlinux-latest-livecd-builder/master/message.conf
+        wget -O $message_file_path https://raw.githubusercontent.com/Hayao0819/archiso-helper/old/message.conf
         msg_dl=0
     else
         msg_dl=1
