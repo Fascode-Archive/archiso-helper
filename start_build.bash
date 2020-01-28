@@ -3,13 +3,9 @@
 if [[ -z $@ ]]; then
     # 設定ファイルのパスを恒久的に変更する場合はこちらの値を使用してください。
     # URLかファイルパス、どちらでも問題ありません。
-    settings_path=https://raw.githubusercontent.com/Hayao0819/archlinux-latest-livecd-builder/master/settings.bash
+    settings_path=https://raw.githubusercontent.com/Hayao0819/archiso-helper/simple/config
 else
-    case $@ in
-        "lts" ) settings_path=https://raw.githubusercontent.com/Hayao0819/archlinux-lts-live/master/settings.bash;;
-        "default" ) settings_path=https://raw.githubusercontent.com/Hayao0819/archlinux-latest-livecd-builder/master/settings.bash;;
-        *) settings_path=$@;;
-    esac
+    settings_path=$@
 fi
 
 
@@ -25,7 +21,7 @@ fi
 
 
 ## 新しいファイルのダウンロード
-wget -O /tmp/archlinux-builder.sh https://0e0.pw/Kviw
+wget -O /tmp/archlinux-builder.sh https://raw.githubusercontent.com/Hayao0819/archiso-helper/simple/archlinux-builder.sh
 
 if [[ -n $(printf "$settings_path" | grep -Eo "http(s?)://(\w|:|%|#|\$|&|\?|\(|\)|~|\.|=|\+|\-|/)+") ]]; then
     wget -O /tmp/settings.bash $settings_path
