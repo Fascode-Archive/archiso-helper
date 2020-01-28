@@ -78,6 +78,9 @@ function settings () {
     ## MD5の作成（0=有効 1=無効 それ以外=無効）
     create_md5=0
 
+    ## sha256の作成（0=有効 1=無効 それ以外=無効）
+    create_sha256=0
+
 
 
     ###以下の設定は下手に変更すると重大な影響を及ぼします。必要な場合を除いて変更しないでください。
@@ -1141,6 +1144,14 @@ if [[ $create_md5 = 0 ]]; then
 fi
 
 
+# SHA256
+if [[ $create_sha256 = 0 ]]; then
+    cd $image_file_dir
+    md5sum $image_file_path > $image_file_name.sha256
+    cd - > /dev/null
+fi
+
+
 ## 権限変更
 blue_log $log_change_perm
 if [[ -z $user ]]; then
@@ -1151,8 +1162,16 @@ if [[ -z $group ]]; then
 fi
 chown $user:$group  $image_file_path
 chmod $perm $image_file_path
-chown $user:$group  $image_file_path.md5
-chmod $perm $image_file_path.md5
+
+if [[ $create_md5 = 0 ]]; then
+    chown $user:$group  $image_file_path.md5
+    chmod $perm $image_file_path.md5
+fi
+
+if [[ $create_sha256 = 0 ]]; then
+    chown $user:$group  $image_file_path.sha256
+    chmod $perm $image_file_path.sha256
+fi
 
 
 ## 作業ディレクトリ削除
