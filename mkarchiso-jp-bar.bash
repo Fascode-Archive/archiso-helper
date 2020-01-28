@@ -11,7 +11,7 @@ if [[ ! $UID = 0 ]]; then
 fi
 
 # export path to $out
-cat >> $out << EOF
+cat >> $out << 'EOF'
 --- /usr/bin/mkarchiso	2019-10-16 15:23:14.000000000 +0000
 +++ /usr/bin/mkarchiso	2019-11-24 22:41:30.594047717 +0000
 @@ -2,7 +2,7 @@
