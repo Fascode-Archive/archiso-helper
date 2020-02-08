@@ -358,6 +358,7 @@ mv $working_directory/out/* $image_file_path
 
 
 #-- MD5 --#
+blue_log "MD5チェックサムを生成しています。"
 if [[ $create_md5 = 0 ]]; then
     cd $image_file_dir
     md5sum $image_file_path  > $image_file_name.md5
@@ -366,6 +367,7 @@ fi
 
 
 #-- SHA256 --#
+blue_log "SHA256チェックサムを生成しています。"
 if [[ $create_sha256 = 0 ]]; then
     cd $image_file_dir
     md5sum $image_file_path > $image_file_name.sha256
