@@ -394,9 +394,11 @@ fi
 
 
 #-- 作業ディレクトリ削除 --#
-if [[ -d $working_directory && ! $delete_working_dir = 1 ]]; then
+if [[ -d $working_directory ]]; then
     blue_log "作業ディレクトリを削除しています。"
     rm -rf $working_directory
+elif [[ ! $delete_working_dir = 1 ]]; then
+:
 else
     red_log "$working_directoryが見つかりませんでした。"
 fi
